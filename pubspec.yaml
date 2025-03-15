@@ -1,0 +1,147 @@
+name: lul
+description: Lul Mobile App
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Utility Packages
+  http: ^1.2.1
+  intl: ^0.19.0
+  logger: ^2.2.0
+  url_launcher: ^6.2.6
+  smooth_page_indicator: ^1.1.0
+  connectivity_plus: ^6.0.3
+  lottie: ^3.1.0 # OR RIVE
+  flutter_native_splash: ^2.4.2
+  shared_preferences: ^2.3.3 
+  font_awesome_flutter: ^10.5.0
+  currency_icons: ^0.3.0
+  country_icons: ^3.0.0
+  phone_numbers_parser: ^9.0.3
+  flutter_launcher_icons: ^0.14.2
+  local_auth: ^2.3.0
+  flutter_secure_storage: ^9.2.4
+  device_info_plus: ^9.1.2  # Current version
+  uuid: ^4.5.1
+  crypto: ^3.0.3
+ 
+ 
+  
+  
+  
+  
+
+  #device_info: ^2.0.3
+
+   # Use the latest version available
+
+
+  # Icons
+  iconsax: ^0.0.8
+  cupertino_icons: ^1.0.6
+
+  # State Management
+  get: ^4.6.6
+  get_storage: ^2.1.1
+
+  # Product Specific
+  readmore: ^3.0.0
+  carousel_slider: ^5.0.0
+  flutter_rating_bar: ^4.0.1
+  capped_progress_indicator: ^0.0.2
+
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  fluttertoast: ^8.2.12
+  flagkit: ^0.0.3
+  dio: ^5.8.0+1
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^18.0.1
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^3.5.5
+  
+  
+
+
+
+  
+  
+
+
+
+  #--------------- ./ PACKAGES END ------------------#
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.2
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logos/logo1.png"
+  adaptive_icon_background: "#1D6B6B"  # Teal background color from the image
+  adaptive_icon_foreground: "assets/logos/logo1.png"
+
+# Add flutter_native_splash configuration
+flutter_native_splash:
+  color: "#1D6B6B"  # Teal background color from the image
+  color_dark: "#1D6B6B"
+  image: assets/logos/logo1.png
+  image_dark: assets/logos/logo1.png
+
+  android_12:
+    color: "#1D6B6B"  # Teal background color from the image
+    color_dark: "#1D6B6B"
+    image: assets/logos/logo1.png
+    image_dark: assets/logos/logo1.png
+
+  web: false
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/logos/
+    - assets/icons/brands/
+    - assets/images/content/
+    - assets/images/banners/
+    - assets/images/reviews/
+    - assets/images/products/
+    - assets/icons/categories/
+    - assets/images/animations/
+    - assets/icons/payment_methods/
+    - assets/images/on_boarding_images/
+    - assets/icons/flags/
+    - assets/lottie/
+
+  #--------------- LOCAL FONTS ------------------#
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 800
