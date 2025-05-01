@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lul/common/styles/text_style.dart';
-import 'package:lul/features/wallet/send/send_non_money_choice.dart';
+import 'package:lul/features/wallet/send/set_amount_screen.dart';
 import 'package:lul/utils/helpers/helper_functions.dart';
 import 'package:lul/utils/language/language_controller.dart';
 import 'package:lul/utils/popups/loaders.dart';
@@ -32,6 +32,7 @@ class _SendForNonLulScreenState extends State<SendForNonLulScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _relationshipController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   // Dropdown values
   final RxString selectedIdType = ''.obs;
@@ -51,6 +52,7 @@ class _SendForNonLulScreenState extends State<SendForNonLulScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _relationshipController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -269,8 +271,21 @@ class _SendForNonLulScreenState extends State<SendForNonLulScreen> {
                       _languageController.getText('reciever_relationship_hint'),
                   hintStyle: FormTextStyle.getHintStyle(context),
                   controller: _relationshipController,
+                  textInputAction: TextInputAction.next,
+                ),
+
+                const SizedBox(height: 16),
+
+                // Description Field
+                _buildLabel('description'),
+                const SizedBox(height: 8),
+                LulGeneralTextFormField(
+                  hintText: _languageController.getText('description_hint') ??
+                      'Add a description',
+                  hintStyle: FormTextStyle.getHintStyle(context),
+                  controller: _descriptionController,
                   textInputAction: TextInputAction.done,
-                  maxLines: 3,
+                  maxLines: 3, // Multiline
                 ),
 
                 const SizedBox(height: 20),
@@ -317,8 +332,11 @@ class _SendForNonLulScreenState extends State<SendForNonLulScreen> {
         _relationshipController.text,
       );
 
-      // Navigate to non-lul money choice screen
-      Get.to(() => const LulSendNonMoneyChoiceScreen());
+      // Set description
+      _transferController.description.value = _descriptionController.text;
+
+      // Navigate to SetAmountScreen
+      Get.to(() => const SetAmountScreen());
     } else {
       LulLoaders.lulerrorSnackBar(
         title: _languageController.getText('error'),

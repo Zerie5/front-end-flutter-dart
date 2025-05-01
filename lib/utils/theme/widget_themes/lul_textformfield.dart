@@ -21,6 +21,7 @@ class LulGeneralTextFormField extends StatelessWidget {
   final Function(bool)? onFocusChange;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final TextInputType? keyboardType;
 
   const LulGeneralTextFormField({
     super.key,
@@ -37,6 +38,7 @@ class LulGeneralTextFormField extends StatelessWidget {
     this.onFocusChange,
     this.prefixIcon,
     this.suffixIcon,
+    this.keyboardType,
   });
 
   @override
@@ -51,6 +53,7 @@ class LulGeneralTextFormField extends StatelessWidget {
         onChanged: onChanged,
         onFieldSubmitted: onFieldSubmitted,
         obscureText: obscureText,
+        keyboardType: keyboardType,
         maxLines: obscureText
             ? 1
             : maxLines, // Force maxLines to 1 if obscureText is true

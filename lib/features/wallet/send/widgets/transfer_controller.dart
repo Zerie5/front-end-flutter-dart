@@ -32,6 +32,9 @@ class TransferController extends GetxController {
   // Add description field
   final RxString description = ''.obs;
 
+  // Add transaction ID field
+  final RxString transactionId = ''.obs;
+
   // Add relationship field
   final RxString relationship = ''.obs;
 
@@ -78,9 +81,68 @@ class TransferController extends GetxController {
   }
 
   void calculateFee() {
-    fee.value = TPricingCalculator.calculateTransferFee(sendAmount.value);
-    totalAmount.value =
-        TPricingCalculator.calculateTotalTransferAmount(sendAmount.value);
+    // Check if calculating for non-wallet transfer
+    if (documentType.value.isNotEmpty ||
+        city.value.isNotEmpty ||
+        state.value.isNotEmpty) {
+      // Use the new API-based fee calculation for non-wallet transfers
+      _calculateNonWalletFee();
+    } else {
+      // Use the simple percentage calculation for regular transfers
+      fee.value = TPricingCalculator.calculateTransferFee(sendAmount.value);
+      totalAmount.value =
+          TPricingCalculator.calculateTotalTransferAmount(sendAmount.value);
+    }
+  }
+
+  // Method for non-wallet fee calculation
+  Future<void> _calculateNonWalletFee() async {
+    try {
+      print(
+          'TransferController: Calculating non-wallet remittance fee with wallet type ID: ${walletTypeId.value}');
+
+      // Get the fee from the API using the wallet type ID
+      fee.value = await TPricingCalculator.calculateNonWalletRemittanceFee(
+          sendAmount.value, walletTypeId.value);
+
+      // Calculate total amount
+      totalAmount.value = sendAmount.value + fee.value;
+
+      print(
+          'TransferController: Non-wallet fee calculated: ${fee.value}, Total: ${totalAmount.value}');
+    } catch (e) {
+      print('TransferController: Error calculating non-wallet fee: $e');
+      // Fallback to default calculation
+      fee.value = TPricingCalculator.calculateTransferFee(sendAmount.value);
+      totalAmount.value =
+          TPricingCalculator.calculateTotalTransferAmount(sendAmount.value);
+    }
+  }
+
+  // Method for delayed non-wallet fee calculation
+  Future<void> calculateDelayedNonWalletFee() async {
+    try {
+      print(
+          'TransferController: Calculating delayed non-wallet remittance fee with wallet type ID: ${walletTypeId.value}');
+
+      // Get the fee from the API using the wallet type ID, with isDelayed=true
+      fee.value = await TPricingCalculator.calculateNonWalletRemittanceFee(
+          sendAmount.value, walletTypeId.value,
+          isDelayed:
+              true // Use the isDelayed parameter to indicate this is a delayed transfer
+          );
+
+      // Calculate total amount
+      totalAmount.value = sendAmount.value + fee.value;
+
+      print(
+          'TransferController: Delayed non-wallet fee calculated: ${fee.value}, Total: ${totalAmount.value}');
+    } catch (e) {
+      print('TransferController: Error calculating delayed non-wallet fee: $e');
+      // Fallback to default 2.8% calculation for delayed transfers
+      fee.value = sendAmount.value * 0.028;
+      totalAmount.value = sendAmount.value + fee.value;
+    }
   }
 
   void setNonLulRecipientDetails(
@@ -365,6 +427,114 @@ class TransferController extends GetxController {
       TFullScreenLoader.stopLoading();
 
       print('TransferController: Non-wallet transaction error: $e');
+
+      _loaders.errorDialog(
+        title: _languageController.getText('error') ?? 'Error',
+        message: e.toString(),
+      );
+    }
+  }
+
+  // New method to initiate non-wallet delayed transfer
+  Future<void> initiateDelayedNonWalletTransaction(
+      String idempotencyKey, String pin) async {
+    print(
+        'TransferController: initiateDelayedNonWalletTransaction called with PIN length ${pin.length} and idempotencyKey $idempotencyKey');
+
+    // Store the idempotency key
+    this.idempotencyKey.value = idempotencyKey;
+
+    try {
+      // First, calculate the correct fee for delayed transfers
+      await calculateDelayedNonWalletFee();
+
+      // Ensure we have a valid wallet type ID
+      if (walletTypeId.value <= 0) {
+        print(
+            'TransferController: Invalid wallet type ID: ${walletTypeId.value}');
+        TFullScreenLoader.stopLoading();
+        _loaders.errorDialog(
+          title: _languageController.getText('error') ?? 'Error',
+          message: _languageController.getText('invalid_wallet') ??
+              'Invalid wallet selected',
+        );
+        return;
+      }
+
+      // Create a default description if none is provided
+      final String transactionDescription = description.value.isEmpty
+          ? 'Delayed non-wallet transfer to ${fullName.value}'
+          : description.value;
+
+      print(
+          'TransferController: Initiating delayed non-wallet transaction with PIN length ${pin.length}, idempotencyKey: $idempotencyKey');
+      print(
+          'TransferController: Transaction details - Amount: ${sendAmount.value}, Currency: ${currency.value}, WalletTypeID: ${walletTypeId.value}');
+      print(
+          'TransferController: Transaction fee (2.8%): ${fee.value}, Total: ${totalAmount.value}');
+      print(
+          'TransferController: Recipient details - Name: ${fullName.value}, ID: ${contactId.value}, Document Type: ${documentType.value}');
+
+      final result = await _transactionService.delayedNonWalletTransfer(
+        walletTypeId: walletTypeId.value,
+        amount: sendAmount.value,
+        currency: currency.value,
+        pin: pin,
+        recipientFullName: fullName.value,
+        idDocumentType: documentType.value,
+        idNumber: contactId.value,
+        phoneNumber: phone.value,
+        email: email.value,
+        country: country.value,
+        state: state.value,
+        city: city.value,
+        relationship: relationship.value,
+        description: transactionDescription,
+        externalTransactionId: transactionId.value,
+        idempotencyKey: idempotencyKey,
+      );
+
+      print(
+          'TransferController: Delayed non-wallet transaction API response received: ${result['status']}');
+
+      // Close loading dialog
+      TFullScreenLoader.stopLoading();
+
+      if (result['status'] == 'success') {
+        // Store transaction data for success screen
+        transactionData.value = result['data'] ?? {};
+
+        print(
+            'TransferController: Delayed non-wallet transaction successful: ${transactionData.value}');
+
+        // Navigate to success screen
+        print('TransferController: Navigating to success screen');
+        Get.off(() =>
+            TransactionSuccessScreen(transactionData: transactionData.value));
+      } else {
+        // Get error code and message
+        final errorCode = result['code'] ?? 'UNKNOWN_ERROR';
+        final errorMessage = result['message'] ?? _getErrorMessage(errorCode);
+
+        print(
+            'TransferController: Delayed non-wallet transaction failed: $errorCode - $errorMessage');
+
+        // Show error dialog
+        _loaders.errorDialog(
+          title:
+              '${_languageController.getText('error') ?? 'Error'} [$errorCode]',
+          message: errorMessage,
+          onPressed: () {
+            // Return to review screen (do nothing as we're already there)
+            print('TransferController: Error dialog dismissed');
+          },
+        );
+      }
+    } catch (e) {
+      // Close loading dialog and show error
+      TFullScreenLoader.stopLoading();
+
+      print('TransferController: Delayed non-wallet transaction error: $e');
 
       _loaders.errorDialog(
         title: _languageController.getText('error') ?? 'Error',

@@ -22,13 +22,30 @@
         .feature-card:hover {
             transform: translateY(-5px);
         }
+        .platform-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .badge-frontend {
+            background-color: #E1BEE7;
+            color: #4A148C;
+        }
+        .badge-backend {
+            background-color: #B3E5FC;
+            color: #01579B;
+        }
     </style>
 </head>
 <body>
     <div class="hero">
         <div class="container">
             <h1>LulPay</h1>
-            <p class="lead">A modern mobile wallet application built with Flutter</p>
+            <p class="lead">A complete mobile wallet solution with Flutter frontend and Spring Boot backend</p>
         </div>
     </div>
 
@@ -37,6 +54,8 @@
             <div class="col-md-4">
                 <div class="card feature-card">
                     <div class="card-body">
+                        <span class="platform-badge badge-frontend">Frontend</span>
+                        <span class="platform-badge badge-backend">Backend</span>
                         <h5 class="card-title">Multi-Currency Support</h5>
                         <p class="card-text">Manage multiple currencies in one place with real-time balance updates.</p>
                     </div>
@@ -45,6 +64,8 @@
             <div class="col-md-4">
                 <div class="card feature-card">
                     <div class="card-body">
+                        <span class="platform-badge badge-frontend">Frontend</span>
+                        <span class="platform-badge badge-backend">Backend</span>
                         <h5 class="card-title">Secure Transactions</h5>
                         <p class="card-text">Send and receive money securely with advanced encryption.</p>
                     </div>
@@ -53,6 +74,8 @@
             <div class="col-md-4">
                 <div class="card feature-card">
                     <div class="card-body">
+                        <span class="platform-badge badge-frontend">Frontend</span>
+                        <span class="platform-badge badge-backend">Backend</span>
                         <h5 class="card-title">QR Code Payments</h5>
                         <p class="card-text">Quick and easy payments using QR code scanning.</p>
                     </div>
@@ -63,7 +86,7 @@
         <div class="row mt-5">
             <div class="col-md-6">
                 <h2>About LulPay</h2>
-                <p>LulPay is a modern mobile wallet application that allows users to manage multiple currencies, send and receive money, and make payments using QR codes. Built with Flutter, it provides a seamless experience across both iOS and Android platforms.</p>
+                <p>LulPay is a comprehensive mobile wallet solution that allows users to manage multiple currencies, send and receive money, and make payments using QR codes. The system consists of a Flutter-based mobile application for iOS and Android, backed by a robust Spring Boot backend service.</p>
                 <p>Key features include:</p>
                 <ul>
                     <li>Multi-currency wallet management</li>
@@ -71,6 +94,8 @@
                     <li>QR code payment system</li>
                     <li>Real-time currency updates</li>
                     <li>User-friendly interface</li>
+                    <li>Non-wallet transfers to unregistered users</li>
+                    <li>Multi-channel notifications (Push, SMS, Email)</li>
                 </ul>
                 <a href="features.html" class="btn btn-primary">Explore Features</a>
             </div>
@@ -84,15 +109,66 @@
         <hr class="my-5">
 
         <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h3 class="mb-0">Frontend (Flutter)</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The LulPay mobile application is built using:</p>
+                        <ul>
+                            <li><strong>Flutter:</strong> Cross-platform UI framework</li>
+                            <li><strong>GetX:</strong> State management and routing</li>
+                            <li><strong>RESTful APIs:</strong> For backend communication</li>
+                        </ul>
+                        <p>The mobile app provides a seamless user experience across both iOS and Android platforms with a modern, intuitive interface.</p>
+                        <a href="architecture.html#frontend" class="btn btn-outline-primary">View Frontend Architecture</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h3 class="mb-0">Backend (Spring Boot)</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>The LulPay backend service is built using:</p>
+                        <ul>
+                            <li><strong>Java 17:</strong> Core programming language</li>
+                            <li><strong>Spring Boot 3.x:</strong> Application framework</li>
+                            <li><strong>Spring Data JPA:</strong> Data access layer</li>
+                            <li><strong>PostgreSQL:</strong> Relational database</li>
+                            <li><strong>Firebase Admin SDK:</strong> For push notifications</li>
+                        </ul>
+                        <p>The backend provides a secure, scalable API for all mobile app operations with robust transaction processing.</p>
+                        <a href="architecture.html#backend" class="btn btn-outline-primary">View Backend Architecture</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
             <div class="col-md-12">
-                <h2>Technical Overview</h2>
-                <p>LulPay is built using the following technologies:</p>
-                <ul>
-                    <li><strong>Flutter:</strong> Cross-platform UI framework</li>
-                    <li><strong>GetX:</strong> State management and routing</li>
-                    <li><strong>RESTful APIs:</strong> For backend communication</li>
-                </ul>
-                <a href="architecture.html" class="btn btn-outline-primary">View Architecture</a>
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h3 class="mb-0">Getting Started</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Ready to explore LulPay? Follow our installation guides to set up both the frontend and backend components:</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-grid gap-2">
+                                    <a href="installation.html#frontend" class="btn btn-outline-primary">Frontend Installation Guide</a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-grid gap-2">
+                                    <a href="installation.html#backend" class="btn btn-outline-primary">Backend Installation Guide</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -102,5 +178,7 @@
             <p>&copy; 2023 LulPay. All rights reserved.</p>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

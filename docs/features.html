@@ -28,13 +28,21 @@
             justify-content: center;
             border-radius: 8px;
         }
+        .nav-tabs .nav-link {
+            color: #6200EE;
+        }
+        .nav-tabs .nav-link.active {
+            color: #6200EE;
+            font-weight: bold;
+            border-bottom: 2px solid #6200EE;
+        }
     </style>
 </head>
 <body>
     <div class="hero">
         <div class="container">
             <h1>LulPay Features</h1>
-            <p class="lead">Explore the key features of the LulPay mobile wallet application</p>
+            <p class="lead">Explore the key features of the LulPay application ecosystem</p>
         </div>
     </div>
 
@@ -46,106 +54,235 @@
             </ol>
         </nav>
 
-        <div class="feature-section">
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>Multi-Currency Wallet</h2>
-                    <p>The wallet is the core feature of LulPay, allowing users to manage multiple currencies in one place.</p>
-                    <h4>Key Capabilities:</h4>
-                    <ul>
-                        <li>View total portfolio value across all currencies</li>
-                        <li>Track individual currency balances</li>
-                        <li>Add new currencies to your wallet</li>
-                        <li>View transaction history for each currency</li>
-                    </ul>
+        <!-- Tab navigation -->
+        <ul class="nav nav-tabs mb-4" id="featuresTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="frontend-tab" data-bs-toggle="tab" data-bs-target="#frontend" type="button" role="tab" aria-controls="frontend" aria-selected="true">Frontend (Flutter)</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="backend-tab" data-bs-toggle="tab" data-bs-target="#backend" type="button" role="tab" aria-controls="backend" aria-selected="false">Backend (Spring Boot)</button>
+            </li>
+        </ul>
+
+        <!-- Tab content -->
+        <div class="tab-content" id="featuresTabsContent">
+            <!-- Frontend Tab -->
+            <div class="tab-pane fade show active" id="frontend" role="tabpanel" aria-labelledby="frontend-tab">
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Multi-Currency Wallet</h2>
+                            <p>The wallet is the core feature of LulPay, allowing users to manage multiple currencies in one place.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>View total portfolio value across all currencies</li>
+                                <li>Track individual currency balances</li>
+                                <li>Add new currencies to your wallet</li>
+                                <li>View transaction history for each currency</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Wallet Home Screenshot</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="screenshot-placeholder">
-                        <p class="text-muted">Wallet Home Screenshot</p>
+
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Send Money Screenshot</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Send Money</h2>
+                            <p>The send money feature allows users to transfer funds quickly and securely.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Send money to other LulPay users</li>
+                                <li>Transfer between your own accounts</li>
+                                <li>Schedule recurring transfers</li>
+                                <li>View transfer history</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Receive Money</h2>
+                            <p>Users can receive money through multiple convenient methods.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Generate a QR code for receiving payments</li>
+                                <li>Share your unique user ID</li>
+                                <li>Create payment requests</li>
+                                <li>Receive notifications for incoming transfers</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Receive Money Screenshot</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">QR Code Payment Screenshot</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>QR Code Payments</h2>
+                            <p>Make quick and easy payments using QR code scanning.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Scan QR codes to make payments</li>
+                                <li>Generate QR codes for receiving payments</li>
+                                <li>Secure transaction processing</li>
+                                <li>Transaction history and receipts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>User Profile</h2>
+                            <p>Manage your user profile and account settings.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>View and update personal information</li>
+                                <li>Manage security settings</li>
+                                <li>Set language preferences</li>
+                                <li>Configure notification preferences</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">User Profile Screenshot</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="feature-section">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="screenshot-placeholder">
-                        <p class="text-muted">Send Money Screenshot</p>
+            <!-- Backend Tab -->
+            <div class="tab-pane fade" id="backend" role="tabpanel" aria-labelledby="backend-tab">
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>User Authentication & Authorization</h2>
+                            <p>Secure user authentication and authorization system with JWT tokens.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>User registration and login</li>
+                                <li>JWT token-based authentication</li>
+                                <li>Role-based access control</li>
+                                <li>Password encryption with BCrypt</li>
+                                <li>Account verification via email/SMS</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Authentication Flow Diagram</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <h2>Send Money</h2>
-                    <p>The send money feature allows users to transfer funds quickly and securely.</p>
-                    <h4>Key Capabilities:</h4>
-                    <ul>
-                        <li>Send money to other LulPay users</li>
-                        <li>Transfer between your own accounts</li>
-                        <li>Schedule recurring transfers</li>
-                        <li>View transfer history</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
-        <div class="feature-section">
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>Receive Money</h2>
-                    <p>Users can receive money through multiple convenient methods.</p>
-                    <h4>Key Capabilities:</h4>
-                    <ul>
-                        <li>Generate a QR code for receiving payments</li>
-                        <li>Share your unique user ID</li>
-                        <li>Create payment requests</li>
-                        <li>Receive notifications for incoming transfers</li>
-                    </ul>
-                </div>
-                <div class="col-md-6">
-                    <div class="screenshot-placeholder">
-                        <p class="text-muted">Receive Money Screenshot</p>
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Transaction Processing Diagram</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>Transaction Processing</h2>
+                            <p>Robust transaction processing system with support for various payment types.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Wallet-to-wallet transfers</li>
+                                <li>Non-wallet transfers to unregistered users</li>
+                                <li>Transaction history and audit logs</li>
+                                <li>Idempotent transaction processing</li>
+                                <li>Transaction status tracking</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="feature-section">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="screenshot-placeholder">
-                        <p class="text-muted">QR Code Payment Screenshot</p>
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Multi-Channel Notifications</h2>
+                            <p>Comprehensive notification system supporting multiple channels.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Push notifications via Firebase Cloud Messaging</li>
+                                <li>SMS notifications for transaction alerts</li>
+                                <li>Email notifications via SendGrid</li>
+                                <li>In-app notifications</li>
+                                <li>Notification preferences management</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Notification System Architecture</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <h2>QR Code Payments</h2>
-                    <p>Make quick and easy payments using QR code scanning.</p>
-                    <h4>Key Capabilities:</h4>
-                    <ul>
-                        <li>Scan QR codes to make payments</li>
-                        <li>Generate QR codes for receiving payments</li>
-                        <li>Secure transaction processing</li>
-                        <li>Transaction history and receipts</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
 
-        <div class="feature-section">
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>User Profile</h2>
-                    <p>Manage your user profile and account settings.</p>
-                    <h4>Key Capabilities:</h4>
-                    <ul>
-                        <li>View and update personal information</li>
-                        <li>Manage security settings</li>
-                        <li>Set language preferences</li>
-                        <li>Configure notification preferences</li>
-                    </ul>
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">API Documentation Screenshot</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2>RESTful API</h2>
+                            <p>Well-designed RESTful API with comprehensive documentation.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Versioned API endpoints</li>
+                                <li>Consistent response formats</li>
+                                <li>Proper HTTP status codes</li>
+                                <li>Input validation and error handling</li>
+                                <li>API documentation with OpenAPI/Swagger</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="screenshot-placeholder">
-                        <p class="text-muted">User Profile Screenshot</p>
+
+                <div class="feature-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2>Non-Wallet Transfers</h2>
+                            <p>Send money to recipients who don't have a LulPay wallet.</p>
+                            <h4>Key Capabilities:</h4>
+                            <ul>
+                                <li>Transfer to non-registered users</li>
+                                <li>Recipient verification via ID documents</li>
+                                <li>SMS notifications to recipients</li>
+                                <li>Disbursement status tracking</li>
+                                <li>Secure pickup process</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="screenshot-placeholder">
+                                <p class="text-muted">Non-Wallet Transfer Flow</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -157,5 +294,7 @@
             <p>&copy; 2023 LulPay. All rights reserved.</p>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

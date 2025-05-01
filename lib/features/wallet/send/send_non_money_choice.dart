@@ -150,13 +150,16 @@ class _LulSendNonMoneyChoiceScreenState
     return true; // Valid case: exactly one currency has a value
   }
 
-  bool _validateSufficientBalance(double sendAmount, Currency currency) {
+  Future<bool> _validateSufficientBalance(
+      double sendAmount, Currency currency) async {
+    // For non-wallet transfers, use the API-based fee calculation
     double totalAmount =
-        TPricingCalculator.calculateTotalTransferAmount(sendAmount);
+        await TPricingCalculator.calculateTotalNonWalletTransferAmount(
+            sendAmount, currency.walletTypeId);
     return totalAmount <= currency.availableBalance;
   }
 
-  void _handleTransfer() {
+  void _handleTransfer() async {
     // First validate currency selection
     if (!_validateSingleCurrencySelection()) {
       return; // Stop if validation fails
@@ -167,8 +170,21 @@ class _LulSendNonMoneyChoiceScreenState
         _currencyController.currencies[_tabController!.index];
     double sendAmount = double.parse(_amounts[selectedCurrency.name] ?? '0');
 
+    // Show loading indicator
+    TFullScreenLoader.openLoadingDialog(
+      _languageController.getText('validating_balance') ??
+          'Validating balance...',
+      'assets/lottie/lottie.json',
+    );
+
     // Validate if user has sufficient balance
-    if (!_validateSufficientBalance(sendAmount, selectedCurrency)) {
+    bool hasSufficientBalance =
+        await _validateSufficientBalance(sendAmount, selectedCurrency);
+
+    // Close loading indicator
+    TFullScreenLoader.stopLoading();
+
+    if (!hasSufficientBalance) {
       LulLoaders.lulerrorSnackBar(
         title: _languageController.getText('error'),
         message: _languageController.getText('insufficientbalance_snack'),

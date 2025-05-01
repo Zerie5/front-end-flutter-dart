@@ -1,0 +1,2 @@
+E:/LulPay/LulPayApp/lul/android/app/.cxx/Debug/5aj2k4h5/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/LulPay/LulPayApp/lul/android/app/.cxx/Debug/5aj2k4h5/armeabi-v7a/CMakeFiles/rebuild_cache.dir
