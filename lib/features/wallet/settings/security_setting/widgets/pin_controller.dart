@@ -6,6 +6,7 @@ import 'package:lul/utils/language/language_controller.dart';
 import 'package:lul/utils/popups/loaders.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:lul/features/wallet/settings/currency_setting/widget/currency_controller.dart';
+import 'package:lul/features/authentication/screens/login/login.dart';
 
 class PINController extends GetxController with WidgetsBindingObserver {
   final RxBool isPinEnabled = true.obs;
@@ -15,7 +16,7 @@ class PINController extends GetxController with WidgetsBindingObserver {
   bool _isCheckingPin = false;
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     print('PINController: Lifecycle state changed to $state');
 
     switch (state) {
@@ -27,30 +28,42 @@ class PINController extends GetxController with WidgetsBindingObserver {
         break;
 
       case AppLifecycleState.resumed:
+        // Only proceed if PIN check is required and we're not already checking
         if (isPinEnabled.value && isPinCheckRequired.value && !_isCheckingPin) {
           _isCheckingPin = true;
-          print('PINController: Showing PIN check dialog');
 
-          // Set the flag to disable currency refreshes
-          CurrencyController.isPinCheckActive = true;
+          // CRITICAL FIX: Check for token FIRST before proceeding with PIN check
+          try {
+            final token = await AuthStorage.getToken();
 
-          // SHOULD ADD: Token check here
-          AuthStorage.getToken().then((token) {
-            if (token == null) {
+            // If no token exists, user is logged out, redirect to login
+            if (token == null || token.isEmpty) {
               print('PINController: No token found, skipping PIN check');
               isPinCheckRequired.value = false;
               _isCheckingPin = false;
-              // Clear the flag if PIN check is skipped
               CurrencyController.isPinCheckActive = false;
+
+              // If not already on login screen, navigate to login
+              if (Get.currentRoute != '/login') {
+                print('PINController: Redirecting to login page');
+                Get.offAll(() => LoginScreen());
+              }
               return;
             }
 
-            // Clear any existing dialogs
+            // Token exists, proceed with PIN check
+            print('PINController: Token found, showing PIN check dialog');
+
+            // Set the flag to disable currency refreshes
+            CurrencyController.isPinCheckActive = true;
+
+            // Clear any existing dialogs before showing new one
             while (Get.isDialogOpen ?? false) {
               Get.back();
             }
 
-            Get.dialog(
+            // Show PIN check dialog
+            await Get.dialog(
               PopScope(
                 canPop: false,
                 child: LulCheckPinScreen(
@@ -79,7 +92,12 @@ class PINController extends GetxController with WidgetsBindingObserver {
               ),
               barrierDismissible: false,
             );
-          });
+          } catch (e) {
+            // Handle any errors during token check
+            print('PINController: Error checking token: $e');
+            _isCheckingPin = false;
+            CurrencyController.isPinCheckActive = false;
+          }
         }
         break;
 

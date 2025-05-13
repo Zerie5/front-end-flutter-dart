@@ -8,7 +8,6 @@ import 'package:lul/utils/theme/widget_themes/lul_button_style.dart';
 import 'dart:math';
 import 'package:lul/common/widgets/pin/transaction_pin.dart';
 import 'package:lul/utils/popups/full_screen_loader.dart';
-import 'package:lul/features/wallet/send/transaction_success_screen.dart';
 
 class LulSendNonMoneyReviewScreen extends StatefulWidget {
   const LulSendNonMoneyReviewScreen({super.key});

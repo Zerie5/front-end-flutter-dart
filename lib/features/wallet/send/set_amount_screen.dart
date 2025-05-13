@@ -350,7 +350,7 @@ class _SetAmountScreenState extends State<SetAmountScreen> {
         }
 
         // Navigate to review screen
-        Get.to(() => LulSendNonMoneyReviewScreen());
+        Get.to(() => const LulSendNonMoneyReviewScreen());
       } catch (e) {
         // Show error for invalid amount
         Get.snackbar(

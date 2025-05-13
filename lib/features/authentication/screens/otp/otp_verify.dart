@@ -171,15 +171,13 @@ class _LulOtpVerifyScreenState extends State<LulOtpVerifyScreen> {
                   if (resendTime == 0)
                     LulOutlineButton(
                       onPressed: () {
-                        setState(() {
-                          resendTime = 120;
-                          startTimer();
-                        });
+                        _handleResendOtp();
                       },
                       text: _languageController.getText('resend'),
                       fontSize: 16,
                       borderColor: TColors.secondary,
                       textColor: TColors.secondary,
+                      isLoading: isLoading,
                     ),
                 ],
               ),
@@ -216,6 +214,66 @@ class _LulOtpVerifyScreenState extends State<LulOtpVerifyScreen> {
       Get.snackbar(
         _languageController.getText('error'),
         _languageController.getText(response['code']),
+        backgroundColor: TColors.error,
+        colorText: TColors.white,
+      );
+    }
+  }
+
+  Future<void> _handleResendOtp() async {
+    print('Handling OTP resend...');
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      print('Calling OtpService.resendOtp()');
+      final response = await OtpService.resendOtp();
+      print('OTP resend response: $response');
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response['status'] == 'success') {
+        // Reset timer with value from server response or default to 120 seconds
+        int expiryMinutes = 2; // default
+        if (response.containsKey('expiresInMinutes')) {
+          expiryMinutes =
+              int.tryParse(response['expiresInMinutes'].toString()) ?? 2;
+        }
+
+        print('Setting resend timer to: ${expiryMinutes * 60} seconds');
+        setState(() {
+          resendTime = expiryMinutes * 60;
+          startTimer();
+        });
+
+        Get.snackbar(
+          _languageController.getText('success'),
+          response['message'] ?? _languageController.getText('otp_resent'),
+          backgroundColor: TColors.success.withOpacity(0.7),
+          colorText: TColors.white,
+        );
+      } else {
+        print('OTP resend failed with status: ${response['status']}');
+        Get.snackbar(
+          _languageController.getText('error'),
+          _languageController.getText(response['code'] ?? 'ERR_807'),
+          backgroundColor: TColors.error,
+          colorText: TColors.white,
+        );
+      }
+    } catch (e) {
+      print('Error in _handleResendOtp: $e');
+      setState(() {
+        isLoading = false;
+      });
+
+      Get.snackbar(
+        _languageController.getText('error'),
+        'Failed to resend OTP. Please try again.',
         backgroundColor: TColors.error,
         colorText: TColors.white,
       );

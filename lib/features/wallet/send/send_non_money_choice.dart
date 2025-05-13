@@ -155,7 +155,8 @@ class _LulSendNonMoneyChoiceScreenState
     // For non-wallet transfers, use the API-based fee calculation
     double totalAmount =
         await TPricingCalculator.calculateTotalNonWalletTransferAmount(
-            sendAmount, currency.walletTypeId);
+            sendAmount, currency.walletTypeId,
+            isDelayed: true);
     return totalAmount <= currency.availableBalance;
   }
 
@@ -202,7 +203,7 @@ class _LulSendNonMoneyChoiceScreenState
 
     // Note: Idempotency key will be generated in the review screen
 
-    Get.to(() => LulSendNonMoneyReviewScreen());
+    Get.to(() => const LulSendNonMoneyReviewScreen());
   }
 
   @override
