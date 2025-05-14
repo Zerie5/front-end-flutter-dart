@@ -41,7 +41,7 @@ class THttpHelper {
         print('Server connection established on attempt ${i + 1}');
         return;
       }
-      await Future.delayed(Duration(seconds: 2)); // Wait before retrying
+      await Future.delayed(const Duration(seconds: 2)); // Wait before retrying
     }
     print('Failed to establish initial server connection after 3 attempts');
   }
@@ -54,7 +54,7 @@ class THttpHelper {
       // Try with Socket first for quick connectivity check
       try {
         final socket = await Socket.connect('192.168.100.79', 8080,
-            timeout: Duration(seconds: 3));
+            timeout: const Duration(seconds: 3));
         await socket.close();
         print('Socket connection successful');
       } catch (e) {
@@ -102,7 +102,7 @@ class THttpHelper {
         _isServerReachable = await _checkServerReachable();
         if (!_isServerReachable && _connectionRetries < _maxConnectionRetries) {
           _connectionRetries++;
-          await Future.delayed(Duration(seconds: 1));
+          await Future.delayed(const Duration(seconds: 1));
           return get(endpoint); // Retry the request
         }
       }
@@ -140,7 +140,7 @@ class THttpHelper {
         _isServerReachable = await _checkServerReachable();
         if (!_isServerReachable && _connectionRetries < _maxConnectionRetries) {
           _connectionRetries++;
-          await Future.delayed(Duration(seconds: 1));
+          await Future.delayed(const Duration(seconds: 1));
           return post(endpoint, data); // Retry the request
         }
       }
@@ -196,14 +196,14 @@ class THttpHelper {
   static Future<void> testConnection() async {
     try {
       print('=== Network Test ===');
-      print('Device type: Physical Android device');
+      //print('Device type: Physical Android device');
       print('Testing backend at: $baseUrl');
       print('Network test started at: ${DateTime.now()}');
 
       // Try with Socket first for quick connectivity check
       try {
         final socket = await Socket.connect('192.168.100.79', 8080,
-            timeout: Duration(seconds: 3));
+            timeout: const Duration(seconds: 3));
         await socket.close();
         print('Socket connection successful');
         _isServerReachable = true;

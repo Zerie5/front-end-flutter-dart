@@ -132,7 +132,7 @@ class NetworkManager extends GetxController {
 
       try {
         final socket = await Socket.connect(uri.host, uri.port,
-            timeout: Duration(seconds: 3));
+            timeout: const Duration(seconds: 3));
         await socket.close();
         _log('Socket connection successful');
 
@@ -141,7 +141,7 @@ class NetworkManager extends GetxController {
           final response = await http
               .get(Uri.parse('$baseUrl/api/connectivity/ping'),
                   headers: THttpHelper.getHeaders())
-              .timeout(Duration(seconds: 5));
+              .timeout(const Duration(seconds: 5));
 
           _log('Ping response',
               {'status': response.statusCode, 'body': response.body});
@@ -159,7 +159,7 @@ class NetworkManager extends GetxController {
         final response = await http
             .get(Uri.parse('$baseUrl/api/connectivity/ping'),
                 headers: THttpHelper.getHeaders())
-            .timeout(Duration(seconds: 5));
+            .timeout(const Duration(seconds: 5));
 
         _log('Fallback ping response', {'status': response.statusCode});
         return response.statusCode >= 200 && response.statusCode < 500;

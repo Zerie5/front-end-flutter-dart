@@ -1,7 +1,6 @@
 import 'package:lul/utils/http/http_client.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:dio/dio.dart';
-import 'dart:convert';
 
 class OtpService {
   static Future<Map<String, dynamic>> verifyOtp(String otpCode) async {
