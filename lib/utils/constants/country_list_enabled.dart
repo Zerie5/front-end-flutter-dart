@@ -82,6 +82,7 @@ const Map<String, List<String>> statesenabled = {
     'Colorado',
     'Connecticut',
     'Delaware',
+    'District of Columbia',
     'Florida',
     'Georgia',
     'Hawaii',
@@ -742,6 +743,7 @@ const Map<String, Map<String, List<String>>> citiesByState = {
     'Colorado': ['Denver', 'Colorado Springs', 'Aurora', 'Fort Collins'],
     'Connecticut': ['Bridgeport', 'New Haven', 'Hartford', 'Stamford'],
     'Delaware': ['Wilmington', 'Dover', 'Newark', 'Middletown'],
+    'District of Columbia': ['Washington'],
     'Florida': ['Miami', 'Orlando', 'Tampa', 'Jacksonville'],
     'Georgia': [
       'Atlanta',

@@ -11,6 +11,8 @@ import 'package:lul/utils/helpers/helper_functions.dart';
 import 'package:lul/features/authentication/screens/login/login.dart';
 import 'package:lul/common/widgets/pin/create_new_pin.dart';
 import 'package:lul/features/wallet/settings/currency_setting/widget/currency_controller.dart';
+import 'package:lul/utils/tokens/auth_storage.dart';
+import 'package:lul/features/authentication/screens/otp/otp_verify.dart';
 
 /// A flexible, reusable PIN check screen.
 ///
@@ -60,6 +62,9 @@ class _LulCheckPinScreenState extends State<LulCheckPinScreen>
     // Set the flag to disable currency refreshes
     CurrencyController.isPinCheckActive = true;
     print('PINController: Showing PIN check dialog');
+
+    // Check registration stage to ensure we only show PIN check for fully activated users
+    _checkRegistrationStage();
 
     // Initialize shake animation
     _shakeController = AnimationController(
@@ -323,6 +328,42 @@ class _LulCheckPinScreenState extends State<LulCheckPinScreen>
         return _buildKeypadButton(keypadItems[index]);
       },
     );
+  }
+
+  // Method to validate registration stage and redirect if necessary
+  Future<void> _checkRegistrationStage() async {
+    try {
+      final registrationStage = await AuthStorage.getRegistrationStage();
+      print(
+          'LulCheckPinScreen: Current registration stage: $registrationStage');
+
+      // Critical security check: Only show PIN check for fully activated users (stage 4)
+      if (registrationStage != 4) {
+        print(
+            'LulCheckPinScreen: Registration stage $registrationStage is not 4, redirecting');
+
+        // Clear the PIN check flag
+        CurrencyController.isPinCheckActive = false;
+
+        // Redirect based on registration stage
+        switch (registrationStage) {
+          case 2: // Basic registration done, needs OTP verification
+            print('LulCheckPinScreen: Redirecting to OTP verification');
+            Get.offAll(() => const LulOtpVerifyScreen());
+            break;
+          case 3: // OTP verified, needs PIN creation
+            print('LulCheckPinScreen: Redirecting to Create PIN screen');
+            Get.offAll(() => const CreatePinScreen());
+            break;
+          default: // Unknown stage, safer to redirect to login
+            print(
+                'LulCheckPinScreen: Unknown registration stage, redirecting to login');
+            Get.offAll(() => LoginScreen());
+        }
+      }
+    } catch (e) {
+      print('LulCheckPinScreen: Error checking registration stage: $e');
+    }
   }
 
   @override

@@ -235,4 +235,78 @@ class AuthService {
       return {'status': 'error', 'code': 'ERR_700'};
     }
   }
+
+  // Added method to handle user registration with proper error handling
+  static Future<Map<String, dynamic>> registerUser(
+      Map<String, dynamic> userData) async {
+    try {
+      print('AuthService: Registering user: ${userData['username']}');
+
+      // Make the API call
+      final response = await THttpHelper.dio.post(
+        '/api/auth/register',
+        data: userData,
+      );
+
+      print('AuthService: Registration response: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // If registration successful and contains a token, save it
+        if (response.data['token'] != null) {
+          await AuthStorage.saveToken(response.data['token']);
+        }
+
+        // Save registration stage if provided, otherwise use default (2 for OTP verification needed)
+        if (response.data['registerStatus'] != null) {
+          final registerStatus =
+              int.parse(response.data['registerStatus'].toString());
+          print('AuthService: Registration stage set to $registerStatus');
+          await AuthStorage.saveRegistrationStage(registerStatus);
+        } else {
+          print(
+              'AuthService: No registration stage in response, using default (2)');
+          await AuthStorage.saveRegistrationStage(2);
+        }
+
+        return response.data;
+      }
+
+      return {'status': 'error', 'code': 'ERR_700'};
+    } catch (e) {
+      print('AuthService: Registration error: $e');
+
+      // Extract error details from DioException
+      if (e is DioException && e.response != null) {
+        final statusCode = e.response?.statusCode;
+        final responseData = e.response?.data;
+
+        // If we have a proper error response from the server
+        if (responseData != null && responseData is Map) {
+          final errorCode = responseData['code'] ?? 'ERR_700';
+          final errorMessage = responseData['message'] ?? 'Registration failed';
+
+          print(
+              'AuthService: Server returned error: $errorCode - $errorMessage');
+          return {
+            'status': 'error',
+            'code': errorCode,
+            'message': errorMessage
+          };
+        }
+
+        print('AuthService: HTTP error with status code: $statusCode');
+        return {
+          'status': 'error',
+          'code': 'ERR_700',
+          'message': 'Registration failed'
+        };
+      }
+
+      return {
+        'status': 'error',
+        'code': 'ERR_700',
+        'message': 'Registration failed'
+      };
+    }
+  }
 }

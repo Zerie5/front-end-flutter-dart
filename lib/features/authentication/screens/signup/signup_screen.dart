@@ -16,12 +16,12 @@ import 'package:lul/utils/theme/widget_themes/lul_dropdown_style.dart';
 import 'package:lul/utils/theme/widget_themes/lul_textformfield.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:lul/utils/validators/validation.dart';
-import 'package:lul/utils/http/http_client.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:lul/utils/constants/refered_by.dart';
 import 'package:lul/features/authentication/screens/signup/widgets/terms_conditions.dart';
 import 'package:lul/utils/theme/widget_themes/lul_button_style.dart';
 import 'package:intl/intl.dart';
+import 'package:lul/services/auth_service.dart';
 
 class SignUpScreen2 extends StatelessWidget {
   SignUpScreen2({super.key});
@@ -245,18 +245,23 @@ class SignUpScreen2 extends StatelessWidget {
                             value: selectedCountry.value.isNotEmpty
                                 ? selectedCountry.value
                                 : null,
-                            items: countriesenabled
-                                .map((country) => DropdownMenuItem(
-                                      value: country,
-                                      child: Text(
-                                        _languageController.getText(country),
-                                        style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black),
-                                      ),
-                                    ))
-                                .toList(),
+                            items: () {
+                              List<String> sortedCountries =
+                                  List<String>.from(countriesenabled);
+                              sortedCountries.sort((a, b) => a.compareTo(b));
+                              return sortedCountries
+                                  .map((country) => DropdownMenuItem(
+                                        value: country,
+                                        child: Text(
+                                          _languageController.getText(country),
+                                          style: TextStyle(
+                                              color: isDark
+                                                  ? Colors.white
+                                                  : Colors.black),
+                                        ),
+                                      ))
+                                  .toList();
+                            }(),
                             onChanged: (value) {
                               if (value != null) {
                                 selectedCountry.value = value;
@@ -286,22 +291,30 @@ class SignUpScreen2 extends StatelessWidget {
                             value: selectedState.value.isNotEmpty
                                 ? selectedState.value
                                 : null,
-                            items: selectedCountry.value.isNotEmpty
-                                ? statesenabled[selectedCountry.value]
-                                        ?.map((state) => DropdownMenuItem(
-                                              value: state,
-                                              child: Text(
-                                                _languageController
-                                                    .getText(state),
-                                                style: TextStyle(
-                                                    color: isDark
-                                                        ? Colors.white
-                                                        : Colors.black),
-                                              ),
-                                            ))
-                                        .toList() ??
-                                    []
-                                : [],
+                            items: () {
+                              if (!selectedCountry.value.isNotEmpty) {
+                                return <DropdownMenuItem<String>>[];
+                              }
+
+                              List<String> states =
+                                  statesenabled[selectedCountry.value] ?? [];
+                              List<String> sortedStates =
+                                  List<String>.from(states);
+                              sortedStates.sort((a, b) => a.compareTo(b));
+
+                              return sortedStates
+                                  .map((state) => DropdownMenuItem(
+                                        value: state,
+                                        child: Text(
+                                          _languageController.getText(state),
+                                          style: TextStyle(
+                                              color: isDark
+                                                  ? Colors.white
+                                                  : Colors.black),
+                                        ),
+                                      ))
+                                  .toList();
+                            }(),
                             onChanged: (value) {
                               if (value != null) {
                                 selectedState.value = value;
@@ -327,24 +340,34 @@ class SignUpScreen2 extends StatelessWidget {
                           value: selectedCity.value.isNotEmpty
                               ? selectedCity.value
                               : null,
-                          items: selectedState.value.isNotEmpty &&
-                                  selectedCountry.value.isNotEmpty
-                              ? (citiesByState[selectedCountry.value]
-                                          ?[selectedState.value] ??
-                                      [])
-                                  .map((city) => DropdownMenuItem(
-                                        value: city,
-                                        child: Text(
-                                          city,
-                                          style: TextStyle(
-                                            color: isDark
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
+                          items: () {
+                            if (!selectedState.value.isNotEmpty ||
+                                !selectedCountry.value.isNotEmpty) {
+                              return <DropdownMenuItem<String>>[];
+                            }
+
+                            List<String> cities =
+                                citiesByState[selectedCountry.value]
+                                        ?[selectedState.value] ??
+                                    [];
+                            List<String> sortedCities =
+                                List<String>.from(cities);
+                            sortedCities.sort((a, b) => a.compareTo(b));
+
+                            return sortedCities
+                                .map((city) => DropdownMenuItem(
+                                      value: city,
+                                      child: Text(
+                                        city,
+                                        style: TextStyle(
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
                                         ),
-                                      ))
-                                  .toList()
-                              : [],
+                                      ),
+                                    ))
+                                .toList();
+                          }(),
                           onChanged: (value) {
                             if (value != null) selectedCity.value = value;
                           },
@@ -591,7 +614,7 @@ class SignUpScreen2 extends StatelessWidget {
         print(
             'Registration data being sent: ${userData.toString()}'); // Log the data
 
-        final response = await THttpHelper.registerUser(userData);
+        final response = await AuthService.registerUser(userData);
 
         if (response['status'] == 'error') {
           final errorCode = response['code'];

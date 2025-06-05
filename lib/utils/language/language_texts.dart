@@ -203,6 +203,32 @@ class LanguageTexts {
       'resendemail': 'Resend E-mail',
       'enterotp': 'Enter OTP',
 
+      //-----Verify OTP Page
+
+      'verification': 'Verification',
+      'verification_code': 'Verification Code',
+      'otp_sent_to': 'OTP Sent To',
+      'not_your-number': 'Not Your NUmber?',
+      'verify': 'Verify',
+      'resend_otp': 'Resend OTP',
+      'resend_after': 'Resend After',
+      'seconds': 'Seconds',
+      'phone_verified': 'Phone Verified Successfully',
+
+      //-----Create PIN Page
+      'create_pin': 'Create PIN',
+      'submit_pin': 'Submit PIN',
+      'confirm_pin_message': 'Are you sure you want to confirm your PIN?',
+      'pin_description':
+          'Personal Identification Number (PIN) is a 4-digit number that you will use to access your account and make transactions. Do not share it with anyone.',
+      'pin_created_login': 'PIN Created Successfully. Login to Continue',
+      'pin_creation_failed': 'PIN Creation Failed',
+      'session_expired': 'Session Expired',
+      'something_went_wrong': 'Something Went Wrong',
+      'enter_complete_pin': 'Enter Complete PIN',
+      'pin_must_be_numbers': 'PIN Must be Numbers Only',
+      'pin_too_simple': 'PIN is too simple',
+
       //-----Account Created Success Page
       'youraccountcreatedtitle': 'Your Account Successfully Created!',
       'youraccountcreatedsubtitle':
@@ -724,6 +750,33 @@ class LanguageTexts {
           'እንቋዕ ሓጎሰካ! ኣካውንትካ ይጽበየካ ኣሎ።  ናብ ኢ-መይልካ ን ኣካውንትኻ ዝኸፍት መልእኽቲ ሰዲድና ኣለና። ናብ ኢ-መይልካ ብ ምኻድ ነቲ መምርሒታት ተኸተሎ።',
       'resendemail': 'ኢ-መይል ዳግማይ ስደድ',
       'enterotp': 'ኮድ ኣእቱ።',
+
+      //-----Verify OTP Page
+
+      'verification': 'ምርግጋጽ',
+      'verification_code': 'መረጋገጺ ኮድ',
+      'otp_sent_to': 'ቴሌፎን ኮድ ዝተሰደዶ',
+      'not_your-number': 'ቑጽርኻ ኣይኮነን፧',
+      'verify': 'ኣረጋግጽ',
+      'resend_otp': 'ኮድ ከምብሓድሽ ስደድ',
+      'resend_after': 'ኮድ ክስደድ እዩ',
+      'seconds': 'ካልኢታት',
+      'phone_verified': 'ቴሌፎንካ ተመዝጊቡ ኣሎ።',
+
+      //-----Create PIN Page
+      'create_pin': 'ውልቃዊ መለለዩ ቁጽሪ መስርሒ (PIN)',
+      'pin_description':
+          'ውልቃዊ መለለዩ ቑጽሪ (PIN) ን ኣካውንትኻ ን ምሕላው ዝጠቅም 4 ኣሃዝ ዘለዎ ቑጽሪ እዩ። ኣህመት ቁጽሪ ን ኣካውንትኻ ን ምሕላው ዝጠቅም 4 ኣሃዝ ዘለዎ ቑጽሪ እዩ። ገንዘብ ንምስዳድ ይኩን ካልእ ስራሕ በዛ መተግበሪ ን ክትዓምም የኽእል። መለለዩ ቑጽርኻ ብጀኻኻ ካልእ ሰብ ክፈልጦ የብሉን!',
+
+      'confirm_pin_message': 'እዛ መሪጽካያ ዘለኻ መለለዩ ቁጽሪ ክምዝገብ ርግጸኛ ዲኻ፧',
+      'pin_created_login':
+          'መለልዩ ቑጽሪ ተመዝጊቡ ኣሎ። ኣካውንትኻ ውን ተሰሪሓ ኣላ። ናብ መእተዊ ገጽ ከተምርሕ ኢኻ።',
+      'pin_creation_failed': 'መለልዩ ቑጽሪ ኣይተመዝገበን',
+      'session_expired': 'ከም ብሓድሽ መግበሪ ዓጺኻ ክፈት።',
+      'something_went_wrong': 'ከም ብሓድሽ መግበሪ ዓጺኻ ክፈት።',
+      'enter_complete_pin': 'መለለዩ ቑጽሪ ብ ምሉእ ኣእቱ።',
+      'pin_must_be_numbers': 'መለለዩ ቑጽሪ ናይ ግድን ቁጽሪ ጥራሕ ክኸውን ኣለዎ።',
+      'pin_too_simple': 'ዘእተኻዮ መለለዩ ቑጽሪ ብቀሊሉ ተገማታይ ኮይኑ ኣሎ። ካልእ ፈትን።',
 
 //-----Account Created Success Page
       'youraccountcreatedtitle': 'ኣካውንትኻ ተሰሪሑ ኣሎ!',

@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:lul/utils/http/http_interceptor.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
+import 'package:lul/services/auth_service.dart';
 
 class THttpHelper {
   // Make baseUrl public and static for access by NetworkManager
@@ -243,20 +244,10 @@ class THttpHelper {
       print('Email: ${userData['email']}');
       print('Device Info: ${userData['deviceInfo']}'); // Log device info
 
-      final response = await dio.post(
-        '/api/auth/register',
-        data: userData, // Send the complete structured data
-      );
-
-      print('THttpHelper: Registration response: ${response.data}');
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-      }
-
-      return {'status': 'error', 'code': 'ERR_700'};
+      // Delegate to AuthService which handles business logic
+      return await AuthService.registerUser(userData);
     } catch (e) {
-      print('THttpHelper: Registration error: $e');
+      print('THttpHelper: Unexpected error: $e');
       return {'status': 'error', 'code': 'ERR_700'};
     }
   }

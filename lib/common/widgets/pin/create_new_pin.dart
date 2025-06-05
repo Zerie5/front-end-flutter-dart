@@ -67,8 +67,8 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
       final shouldProceed = await LulLoaders.alertDialog(
         title: _languageController.getText('confirm_pin'),
         message: _languageController.getText('confirm_pin_message'),
-        confirmText: _languageController.getText('confirm'),
-        cancelText: _languageController.getText('cancel'),
+        confirmText: _languageController.getText('yes'),
+        cancelText: _languageController.getText('no'),
       );
       if (!shouldProceed) return;
 
@@ -194,16 +194,29 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 70),
               Obx(() => Text(
-                    _languageController.getText('Create PIN'),
+                    _languageController.getText('create_pin'),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   )),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
+              Obx(() => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text(
+                      _languageController.getText('pin_description'),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
@@ -264,7 +277,7 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
                 ),
                 child: Obx(() => LulButton(
                       onPressed: _handlePinSubmit,
-                      text: _languageController.getText('Submit Pin'),
+                      text: _languageController.getText('save'),
                       isLoading: isLoading.value,
                       backgroundColor: Colors.green,
                       foregroundColor:

@@ -7,6 +7,8 @@ import 'package:lul/utils/popups/loaders.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:lul/features/wallet/settings/currency_setting/widget/currency_controller.dart';
 import 'package:lul/features/authentication/screens/login/login.dart';
+import 'package:lul/features/authentication/screens/otp/otp_verify.dart';
+import 'package:lul/common/widgets/pin/create_new_pin.dart';
 
 class PINController extends GetxController with WidgetsBindingObserver {
   final RxBool isPinEnabled = true.obs;
@@ -21,10 +23,24 @@ class PINController extends GetxController with WidgetsBindingObserver {
 
     switch (state) {
       case AppLifecycleState.paused:
-        // Store current route
-        _lastRoute = Get.currentRoute;
-        isPinCheckRequired.value = true;
-        print('PINController: Stored route: $_lastRoute');
+        // Before storing route and setting check required, check if token and proper stage exist
+        final token = await AuthStorage.getToken();
+        final registrationStage = await AuthStorage.getRegistrationStage();
+
+        print('PINController: paused - token exists: ${token != null}');
+        print('PINController: paused - registration stage: $registrationStage');
+
+        // Only set PIN check required if user is fully activated (stage 4)
+        if (token != null && registrationStage == 4) {
+          // Store current route
+          _lastRoute = Get.currentRoute;
+          isPinCheckRequired.value = true;
+          print('PINController: Stored route: $_lastRoute, PIN check enabled');
+        } else {
+          print(
+              'PINController: Skipping PIN check setup - not fully activated user');
+          isPinCheckRequired.value = false;
+        }
         break;
 
       case AppLifecycleState.resumed:
@@ -32,9 +48,15 @@ class PINController extends GetxController with WidgetsBindingObserver {
         if (isPinEnabled.value && isPinCheckRequired.value && !_isCheckingPin) {
           _isCheckingPin = true;
 
-          // CRITICAL FIX: Check for token FIRST before proceeding with PIN check
+          // CRITICAL FIX: Check for token AND registration stage FIRST before proceeding with PIN check
           try {
             final token = await AuthStorage.getToken();
+            final registrationStage = await AuthStorage.getRegistrationStage();
+
+            // Add detailed logging to debug the issue
+            print(
+                'PINController: Token exists: ${token != null && token.isNotEmpty}');
+            print('PINController: Registration stage: $registrationStage');
 
             // If no token exists, user is logged out, redirect to login
             if (token == null || token.isEmpty) {
@@ -51,8 +73,49 @@ class PINController extends GetxController with WidgetsBindingObserver {
               return;
             }
 
-            // Token exists, proceed with PIN check
-            print('PINController: Token found, showing PIN check dialog');
+            // SECURITY CRITICAL: Registration stage must be EXACTLY 4 to show PIN check
+            // This is a security requirement - PIN check must only be shown for fully activated users
+            if (registrationStage != 4) {
+              print(
+                  'PINController: Registration stage $registrationStage is not 4, skipping PIN check');
+              isPinCheckRequired.value = false;
+              _isCheckingPin = false;
+              CurrencyController.isPinCheckActive = false;
+
+              // Redirect based on registration stage
+              switch (registrationStage) {
+                case 2: // Basic registration done, needs OTP verification
+                  print('PINController: Redirecting to OTP verification');
+                  Get.offAll(() => const LulOtpVerifyScreen());
+                  break;
+                case 3: // OTP verified, needs PIN creation
+                  print('PINController: Redirecting to Create PIN screen');
+                  Get.offAll(() => const CreatePinScreen());
+                  break;
+                default: // Unknown stage, safer to redirect to login
+                  print(
+                      'PINController: Unknown registration stage, redirecting to login');
+                  Get.offAll(() => LoginScreen());
+              }
+              return;
+            }
+
+            // Manually check the current route to avoid showing PIN checks during registration flow
+            final currentRoute = Get.currentRoute;
+            if (currentRoute == '/LulOtpVerifyScreen' ||
+                currentRoute == '/CreatePinScreen' ||
+                currentRoute == '/login') {
+              print(
+                  'PINController: On registration/login flow screen ($currentRoute), skipping PIN check');
+              isPinCheckRequired.value = false;
+              _isCheckingPin = false;
+              CurrencyController.isPinCheckActive = false;
+              return;
+            }
+
+            // Token exists and stage is 4, proceed with PIN check
+            print(
+                'PINController: Token found and registration stage is 4, showing PIN check dialog');
 
             // Set the flag to disable currency refreshes
             CurrencyController.isPinCheckActive = true;
@@ -110,6 +173,15 @@ class PINController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+
+    // Initialize with PIN check not required
+    isPinCheckRequired.value = false;
+    print('PINController: Initialized with isPinCheckRequired = false');
+
+    // Check registration stage on init for debugging
+    AuthStorage.getRegistrationStage().then((stage) {
+      print('PINController: Current registration stage on init = $stage');
+    });
   }
 
   @override

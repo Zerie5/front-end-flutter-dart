@@ -121,7 +121,7 @@ class _LulOtpVerifyScreenState extends State<LulOtpVerifyScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'OTP sent to: ${widget.phoneNumber}',
+                          '${_languageController.getText('otp_sent_to')}: ${widget.phoneNumber}',
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: TColors.white,
@@ -130,9 +130,9 @@ class _LulOtpVerifyScreenState extends State<LulOtpVerifyScreen> {
                         ),
                         TextButton(
                           onPressed: () => Get.toNamed('/edit-phone'),
-                          child: const Text(
-                            'Not your number?',
-                            style: TextStyle(
+                          child: Text(
+                            _languageController.getText('not_your-number'),
+                            style: const TextStyle(
                               color: TColors.secondary,
                               decoration: TextDecoration.underline,
                             ),
@@ -173,7 +173,7 @@ class _LulOtpVerifyScreenState extends State<LulOtpVerifyScreen> {
                       onPressed: () {
                         _handleResendOtp();
                       },
-                      text: _languageController.getText('resend'),
+                      text: _languageController.getText('resend_otp'),
                       fontSize: 16,
                       borderColor: TColors.secondary,
                       textColor: TColors.secondary,

@@ -5,7 +5,6 @@ import 'package:lul/common/widgets/pin/create_new_pin.dart';
 import 'package:lul/features/authentication/screens/login/login.dart';
 import 'package:lul/features/authentication/screens/otp/otp_verify.dart';
 import 'package:lul/features/wallet/settings/profile/controller/user_controller.dart';
-import 'package:lul/features/wallet/settings/security_setting/widgets/pin_check.dart';
 import 'package:lul/features/wallet/settings/security_setting/widgets/pin_controller.dart';
 import 'package:lul/navigation_menu.dart';
 import 'package:lul/utils/constants/text_strings.dart';
@@ -15,7 +14,6 @@ import 'package:lul/utils/theme/theme.dart';
 import 'package:lul/features/wallet/settings/currency_setting/widget/currency_controller.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:lul/utils/language/language_controller.dart';
-import 'package:lul/services/profile_service.dart';
 import 'package:lul/services/currency_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lul/services/fcm_service.dart';
@@ -128,27 +126,10 @@ class App extends StatelessWidget {
           case 3: // OTP verified
             return const CreatePinScreen();
           case 4: // Fully activated
-            print('App: User fully activated, proceeding to PIN check');
-            return FutureBuilder<Map<String, dynamic>>(
-              future: ProfileService.getUserProfile(),
-              builder: (context, profileSnapshot) {
-                if (profileSnapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (profileSnapshot.hasData &&
-                    profileSnapshot.data?['status'] == 'success') {
-                  return LulCheckPinScreen(
-                    maxAttempts: 3,
-                    onSuccess: () => Get.offAll(() => const NavigationMenu()),
-                  );
-                }
-
-                // Show error screen or login without clearing token
-                return LoginScreen();
-              },
-            );
+            print('App: User fully activated, proceeding to main app');
+            // Don't trigger PIN check here - let PINController handle it
+            // This avoids duplicate PIN checks
+            return const NavigationMenu();
           default:
             print('App: Invalid registration stage, showing login screen');
             return LoginScreen();
