@@ -1,4 +1,6 @@
-# LulPay - Mobile Financial Platform
+# LulPay - Mobile Financial Platform Front End Mobile App
+
+(Backend Repo is Private But could be provided for SCF on Request)
 
 ![LulPay Logo](assets/logos/logo1.png)
 

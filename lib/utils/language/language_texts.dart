@@ -254,7 +254,7 @@ class LanguageTexts {
       'send_hm': 'Send',
       'recieve_hm': 'Recieve',
       'pay_hm': 'Pay',
-      'raisefunds_hm': 'Raise Funds',
+      'raisefunds_hm': 'Deposit',
       'swap_hm': 'Swap',
       'addasset': 'Add Asset',
 

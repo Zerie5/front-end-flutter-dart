@@ -3,8 +3,6 @@ import 'package:lul/features/authentication/screens/login/login.dart';
 import 'package:lul/utils/http/http_client.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:get/get.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileService {
@@ -166,27 +164,6 @@ class ProfileService {
     const deviceIdKey = 'device_id';
     String? deviceId = prefs.getString(deviceIdKey);
 
-    if (deviceId == null) {
-      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-      try {
-        if (GetPlatform.isAndroid) {
-          final androidInfo = await deviceInfo.androidInfo;
-          deviceId = androidInfo.id;
-        } else if (GetPlatform.isIOS) {
-          final iosInfo = await deviceInfo.iosInfo;
-          deviceId = iosInfo.identifierForVendor;
-        }
-      } catch (e) {
-        print('Error getting device info: $e');
-      }
-
-      if (deviceId == null || deviceId.isEmpty) {
-        deviceId = const Uuid().v4();
-      }
-
-      await prefs.setString(deviceIdKey, deviceId);
-    }
-
-    return deviceId;
+    return deviceId ?? '';
   }
 }

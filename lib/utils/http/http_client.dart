@@ -10,9 +10,10 @@ import 'package:lul/services/auth_service.dart';
 
 class THttpHelper {
   // Make baseUrl public and static for access by NetworkManager
-  static const String baseUrl = 'http://192.168.100.79:8080'; // Your base URL
-  static const String _username = 'admin'; // Backend username
-  static const String _password = 'lul';
+  static const String baseUrl =
+      'https://lul-backend.onrender.com'; // Your base URL
+  //static const String _username = 'admin'; // Backend username
+  // static const String _password = 'lul';
 
   // Connection state
   static bool _isServerReachable = false;
@@ -85,11 +86,12 @@ class THttpHelper {
 
   // Make getHeaders public and static for access by NetworkManager
   static Map<String, String> getHeaders() {
-    final String basicAuth =
-        'Basic ${base64Encode(utf8.encode('$_username:$_password'))}';
+    //final String basicAuth =
+//'Basic ${base64Encode(utf8.encode('$_username:$_password'))}';
     return {
-      'Authorization': basicAuth,
+      // 'Authorization': basicAuth,
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     };
   }
 

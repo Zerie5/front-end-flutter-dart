@@ -27,7 +27,7 @@ class _LulOtpVerifyScreenState extends State<LulOtpVerifyScreen> {
   final LanguageController _languageController = Get.find<LanguageController>();
   bool invalidOtp = false;
   bool isLoading = false;
-  int resendTime = 120; // Changed to 2 minutes
+  int resendTime = 60; // Changed to 1 minute
   late Timer countdownTimer;
 
   // Six controllers for 6-digit OTP

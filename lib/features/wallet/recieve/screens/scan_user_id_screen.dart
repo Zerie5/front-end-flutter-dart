@@ -76,9 +76,6 @@ class _ScanUserIdScreenState extends State<ScanUserIdScreen> {
 
         // Trigger search if the code is valid
         String? validationError = LValidator().validateUserIDEntry(scannedCode);
-        if (validationError == null) {
-          _handleSaveButtonPress();
-        }
 
         break;
       }

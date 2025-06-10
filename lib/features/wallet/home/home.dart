@@ -15,9 +15,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lul/features/wallet/home/widgets/build_promo_card.dart';
 import 'package:lul/utils/helpers/helper_functions.dart';
 import 'package:lul/utils/language/language_controller.dart';
-import 'package:lul/services/sms_service.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:lul/features/wallet/settings/profile/controller/user_controller.dart';
+import 'package:lul/features/wallet/deposit/screens/deposit_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -299,24 +299,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   label: _languageController
                                       .getText('raisefunds_hm'),
                                   buttonSize: buttonSize,
-                                  onPressed: () async {
-                                    final success =
-                                        await SmsService.sendTestSms();
-                                    if (success) {
-                                      Get.snackbar(
-                                        'Success',
-                                        'Test SMS sent successfully',
-                                        backgroundColor: Colors.green,
-                                        colorText: Colors.white,
-                                      );
-                                    } else {
-                                      Get.snackbar(
-                                        'Error',
-                                        'Failed to send test SMS',
-                                        backgroundColor: Colors.red,
-                                        colorText: Colors.white,
-                                      );
-                                    }
+                                  onPressed: () {
+                                    // Navigate to deposit screen
+                                    Get.to(() => const DepositScreen());
                                   },
                                 );
                               }),

@@ -3,7 +3,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:lul/utils/http/http_client.dart';
-import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:dio/dio.dart';
@@ -114,30 +113,7 @@ class FCMService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     String? deviceId = prefs.getString(_deviceIdKey);
 
-    if (deviceId == null) {
-      // Generate a new device ID if none exists
-      try {
-        if (GetPlatform.isAndroid) {
-          final androidInfo = await _deviceInfo.androidInfo;
-          deviceId = androidInfo.id; // Use Android ID as device identifier
-        } else if (GetPlatform.isIOS) {
-          final iosInfo = await _deviceInfo.iosInfo;
-          deviceId = iosInfo.identifierForVendor; // Use iOS vendor identifier
-        }
-      } catch (e) {
-        print('FCMService: Error getting device info: $e');
-      }
-
-      // If we still don't have a device ID, generate a UUID
-      if (deviceId == null || deviceId.isEmpty) {
-        deviceId = const Uuid().v4();
-      }
-
-      // Save the device ID for future use
-      await prefs.setString(_deviceIdKey, deviceId);
-    }
-
-    return deviceId;
+    return deviceId ?? '';
   }
 
   Future<void> _sendTokenToBackend(String token) async {

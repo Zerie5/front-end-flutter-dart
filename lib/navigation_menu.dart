@@ -9,6 +9,7 @@ import 'package:lul/features/wallet/settings/profile/controller/user_controller.
 import 'package:lul/features/wallet/settings/security_setting/widgets/pin_check.dart';
 import 'package:lul/features/wallet/settings/settings.dart';
 import 'package:lul/features/wallet/settings/security_setting/widgets/pin_controller.dart';
+import 'package:lul/features/wallet/transactions/screens/transaction_history_screen.dart';
 import 'package:lul/utils/constants/colors.dart';
 import 'package:lul/utils/helpers/helper_functions.dart';
 import 'package:lul/utils/helpers/network_manager.dart';
@@ -441,6 +442,11 @@ class _NavigationMenuState extends State<NavigationMenu> {
               Get.offAll(() => LoginScreen());
             }
           } else {
+            print('NavigationMenu: Button clicked for index $index');
+            if (index == 5) {
+              print(
+                  'NavigationMenu: Transaction button clicked - navigating to TransactionHistoryScreen');
+            }
             controller.setScreen(index);
             Navigator.pop(context);
           }
@@ -459,15 +465,19 @@ class NavigationController extends GetxController {
     Container(color: Colors.orange),
     Container(color: Colors.lightBlue),
     Container(color: Colors.red),
-    Container(color: Colors.teal),
+    const TransactionHistoryScreen(),
     const LulContactsScreen(),
     SettingsScreen(),
   ];
 
   void setScreen(int index) {
+    print('NavigationController: setScreen called with index $index');
     if (index >= 0 && index < screens.length) {
+      print(
+          'NavigationController: Setting selectedIndex to $index, screen: ${screens[index].runtimeType}');
       selectedIndex.value = index;
     } else {
+      print('NavigationController: Invalid index $index');
       Get.snackbar(
         "Error",
         "Invalid menu option selected. Please try again.",

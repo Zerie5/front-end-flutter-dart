@@ -562,7 +562,7 @@ class SignUpScreen2 extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         Get.to(() => const LulOtpVerifyScreen(
-                              phoneNumber: "+256703241464",
+                              phoneNumber: "+1234567890",
                             ));
                       },
                       child: const Text('Open Verify OTP'),
