@@ -144,17 +144,28 @@ class LulLoaders {
         content: Text(message, style: const TextStyle(color: TColors.white)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-              if (onPressed != null) {
-                onPressed();
-              }
-            },
-            child: Text(
-              languageController.getText('ok'),
-              style: const TextStyle(
-                  color: TColors.white, fontWeight: FontWeight.bold),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () {
+                Get.back();
+                if (onPressed != null) {
+                  onPressed();
+                }
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Text(
+                  languageController.getText('ok'),
+                  style: const TextStyle(
+                    color: TColors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -182,11 +193,24 @@ class LulLoaders {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(_languageController.getText('ok'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => Navigator.of(context).pop(),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    _languageController.getText('ok'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -253,14 +277,27 @@ class LulLoaders {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-                onPressed?.call();
-              },
-              child: Text(languageController.getText('ok'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Get.back();
+                  onPressed?.call();
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    languageController.getText('ok'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -287,14 +324,27 @@ class LulLoaders {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-                onPressed?.call();
-              },
-              child: Text(languageController.getText('ok'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Get.back();
+                  onPressed?.call();
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    languageController.getText('ok'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -322,17 +372,43 @@ class LulLoaders {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           actions: [
-            TextButton(
-              onPressed: () => Get.back(result: false),
-              child: Text(cancelText ?? languageController.getText('cancel'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => Get.back(result: false),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    cancelText ?? languageController.getText('cancel'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            TextButton(
-              onPressed: () => Get.back(result: true),
-              child: Text(confirmText ?? languageController.getText('ok'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => Get.back(result: true),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    confirmText ?? languageController.getText('ok'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -360,14 +436,27 @@ class LulLoaders {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           actions: [
-            TextButton(
-              onPressed: () {
-                Get.back();
-                onPressed?.call();
-              },
-              child: Text(languageController.getText('ok'),
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Get.back();
+                  onPressed?.call();
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text(
+                    languageController.getText('ok'),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         );

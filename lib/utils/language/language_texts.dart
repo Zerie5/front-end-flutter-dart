@@ -504,6 +504,8 @@ class LanguageTexts {
       'reciever_city_hint': 'Enter Reciever City',
       'reciever_relationship': 'Relationship',
       'reciever_relationship_hint': 'Enter your Relationship with Reciever',
+      'fund_description': 'Description',
+      'fund_description_hint': 'Enter Purpose of Fund Transfer',
 
       ///--------Contact Detail Screen--------//
 
@@ -521,8 +523,16 @@ class LanguageTexts {
           'You cant send money in multiple currencies at one time.',
       'insufficientbalance_snack': 'Insufficient balance',
 
+      ///--------Currency Selection and Amount Screen (For Temporary)--------//
+      'select_currency': 'Select Currency',
+      'enter_amount': 'Enter Amount',
+      'transaction_id': 'Transaction ID',
+      'enter_transaction_id':
+          'Enter Transaction ID From Your External Transfer',
+
       ///--------Review Transfer Screen--------//
       'review_transfer': 'Review Transfer',
+      'executing_transaction': 'Executing Transaction.....',
 
       ///contact_id is written in Add Contact Screen
       'transfer_details': 'Transfer Details',
@@ -533,6 +543,9 @@ class LanguageTexts {
 
       ///--------Review Non Lul Transfer Screen--------//
       'document_type': 'Document Type',
+
+      ///--------Transaction Success Screen--------//
+      'back_to_home': 'Back to Home',
 
       ///***************************BACK-END**************************///
 
@@ -1044,6 +1057,8 @@ class LanguageTexts {
       'reciever_city_hint': 'ተቐባላይ ዝነብረሉ ኸተማ ምረጽ።',
       'reciever_relationship': 'ዝምድና',
       'reciever_relationship_hint': 'ምስ ተቐባላይ ዘለካ ዝምድና ጸሓፍ።',
+      'fund_description': 'ተወሳኺ ሓበሬታ',
+      'fund_description_hint': 'ኣድላዩ እንተ ኮይኑ ገንዘብ ንምንታይ ይስደድ ኣሎ ኣብዚ ጸሓፍ',
 
       ///--------Contact Detail Screen--------//
 
@@ -1060,8 +1075,15 @@ class LanguageTexts {
       'onecurrencyonly_snack': 'ኣብ ሓደ ግዜ ብ ሓንቲ ባጤራ ጥራሕ እዩ ምስዳድ ዝፍቀድ።',
       'insufficientbalance_snack': 'ኣብ ሕሳብካ ዘሎ ገንዘብ እኹል ኣይኮነን።',
 
+      ///--------Currency Selection and Amount Screen (For Temporary)--------//
+      'select_currency': 'ባጤራ ምረጽ',
+      'enter_amount': 'ዝስደድ ገንዘብ ኣእቱ',
+      'transaction_id': 'መወከሲ ቑጽሪ',
+      'enter_transaction_id': 'ናይ ዝገበርካዮ ምትሕልላፍ መወከሲ ቑጽሪ (እንተ ኣሎ)',
+
       ///--------Review Transfer Screen--------//
       'review_transfer': 'መረጋገጺ',
+      'executing_transaction': 'ገንዘብ ይስደድ ኣሎ.....',
 
       ///contact_id is written in Add Contact Screen
       'transfer_details': 'ዝርዝር ሓበሬታ',
@@ -1072,6 +1094,9 @@ class LanguageTexts {
 
       ///--------Review Non Lul Transfer Screen--------//
       'document_type': 'መለለዩ ሰነድ',
+
+      ///--------Transaction Success Screen--------//
+      'back_to_home': 'ናብ ቐንዲ ገዝ ተመለስ',
 
       ///***************************BACK-END**************************///
 

@@ -277,11 +277,12 @@ class _SendForNonLulScreenState extends State<SendForNonLulScreen> {
                 const SizedBox(height: 16),
 
                 // Description Field
-                _buildLabel('description'),
+                _buildLabel('fund_description'),
                 const SizedBox(height: 8),
                 LulGeneralTextFormField(
-                  hintText: _languageController.getText('description_hint') ??
-                      'Add a description',
+                  hintText:
+                      _languageController.getText('fund_description_hint') ??
+                          'Add a description',
                   hintStyle: FormTextStyle.getHintStyle(context),
                   controller: _descriptionController,
                   textInputAction: TextInputAction.done,

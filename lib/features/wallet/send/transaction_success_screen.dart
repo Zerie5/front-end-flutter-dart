@@ -216,7 +216,7 @@ class TransactionSuccessScreen extends StatelessWidget {
                             // Description
                             _buildDetailRow(
                               context,
-                              languageController.getText('description') ??
+                              languageController.getText('fund_description') ??
                                   'Description',
                               transactionData['description'] ?? '',
                             ),

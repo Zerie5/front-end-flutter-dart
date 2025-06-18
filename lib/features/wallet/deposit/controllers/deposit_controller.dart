@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../services/deposit_service.dart';
-import '../../../../utils/popups/loaders.dart';
 import '../models/deposit_models.dart';
 
 class DepositController extends GetxController {

@@ -6,7 +6,6 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 
 import '../controllers/deposit_controller.dart';
-import '../models/deposit_models.dart';
 import 'payment_method_screen.dart';
 import '../../../../utils/theme/widget_themes/lul_button_style.dart';
 

@@ -207,40 +207,7 @@ class _LulSendNonMoneyReviewScreenState
                               'Transaction ID',
                           _transferController.transactionId.value,
                         ),
-                        const SizedBox(height: TSizes.spaceBtwItems),
                       ],
-
-                      // Add description field
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText:
-                              _languageController.getText('description_hint') ??
-                                  'Add a description (optional)',
-                          hintStyle: TextStyle(
-                            color: TColors.white.withOpacity(0.5),
-                            fontSize: 14,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                                color: TColors.white.withOpacity(0.3)),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                                color: TColors.white.withOpacity(0.3)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(color: TColors.white),
-                          ),
-                        ),
-                        style: const TextStyle(color: TColors.white),
-                        maxLines: 2,
-                        onChanged: (value) {
-                          _transferController.description.value = value;
-                        },
-                      ),
                     ],
                   ),
                 ),

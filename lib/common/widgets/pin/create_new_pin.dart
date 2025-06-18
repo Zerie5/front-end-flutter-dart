@@ -279,9 +279,7 @@ class _CreatePinScreenState extends State<CreatePinScreen> {
                       onPressed: _handlePinSubmit,
                       text: _languageController.getText('save'),
                       isLoading: isLoading.value,
-                      backgroundColor: Colors.green,
-                      foregroundColor:
-                          dark ? TColors.primaryDark : TColors.primary,
+                      foregroundColor: Colors.white,
                       height: 55,
                     )),
               ),

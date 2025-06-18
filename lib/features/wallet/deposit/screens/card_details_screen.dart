@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
-import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/theme/widget_themes/lul_button_style.dart';
 import '../controllers/deposit_controller.dart';
-import '../models/deposit_models.dart';
 import 'confirmation_screen.dart';
 
 class CardDetailsScreen extends StatelessWidget {
