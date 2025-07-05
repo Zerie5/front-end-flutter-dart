@@ -18,6 +18,7 @@ LulPay is a secure, feature-rich mobile financial platform built with Flutter th
 
 ### Wallet Management
 - Multi-currency wallet support with real-time balance display
+- Stellar Testnet Integrated
 - One-click currency switching between different available currencies
 - Real-time balance updates and transaction history
 - Currency conversion with competitive rates
