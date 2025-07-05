@@ -57,6 +57,13 @@ class AuthService {
         await AuthStorage.saveToken(token);
         await AuthStorage.saveUserId(response.data['userId']);
 
+        // Save userTableId if available
+        if (response.data['userTableId'] != null) {
+          await AuthStorage.saveUserTableId(response.data['userTableId']);
+          print(
+              'Login Success - UserTableId saved: ${response.data['userTableId']}');
+        }
+
         // Save user unique ID if available in the response
         String? userUniqueId;
         if (response.data['profile'] != null &&
@@ -101,6 +108,7 @@ class AuthService {
           'status': 'success',
           'token': token,
           'userId': response.data['userId'],
+          'userTableId': response.data['userTableId'],
           'userUniqueId': userUniqueId,
           'profile': response.data['profile'],
           'registerStatus': response.data['registerStatus']
@@ -211,6 +219,9 @@ class AuthService {
         }
         if (response.data['userId'] != null) {
           await AuthStorage.saveUserId(response.data['userId']);
+        }
+        if (response.data['userTableId'] != null) {
+          await AuthStorage.saveUserTableId(response.data['userTableId']);
         }
         // Set initial registration stage
         await AuthStorage.saveRegistrationStage(1);

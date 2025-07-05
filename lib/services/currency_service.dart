@@ -24,7 +24,19 @@ class CurrencyService extends GetxService {
         };
       }
 
+      // Get the userTableId for the new endpoint
+      final userTableId = await AuthStorage.getUserTableId();
+      if (userTableId == null) {
+        print('CurrencyService: No userTableId available');
+        return {
+          'status': 'error',
+          'code': 'ERR_AUTH',
+          'message': 'User table ID not available',
+        };
+      }
+
       print('CurrencyService: Using token: ${token.substring(0, 10)}...');
+      print('CurrencyService: Using userTableId: $userTableId');
       print('CurrencyService: Attempt ${retryCount + 1} of ${maxRetries + 1}');
 
       // Use Dio with the interceptor that adds the token, but with a longer timeout
@@ -33,9 +45,11 @@ class CurrencyService extends GetxService {
             seconds: 60), // Longer timeout for this specific endpoint
       );
 
-      // Use Dio with the interceptor that adds the token
-      final response =
-          await THttpHelper.dio.get('/api/user/wallets', options: options);
+      // Use the new comprehensive wallet overview endpoint
+      final response = await THttpHelper.dio.get(
+        '/api/v1/wallets/user/$userTableId/overview',
+        options: options,
+      );
 
       print(
           'CurrencyService: Wallet API response status: ${response.statusCode}');
@@ -43,9 +57,18 @@ class CurrencyService extends GetxService {
       if (response.statusCode == 200) {
         final responseData = response.data;
 
-        if (responseData['status'] == 'success' &&
-            responseData['data'] != null) {
-          return responseData;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          // Extract wallets from the nested data structure
+          final wallets = responseData['data']['wallets'] ?? [];
+
+          // Convert the response format to match the expected format
+          return {
+            'status': 'success',
+            'data': wallets,
+            'message': responseData['message'],
+            'summary': responseData['data']['summary'],
+            'totalWallets': responseData['data']['totalWallets'],
+          };
         } else {
           print('CurrencyService: Invalid response format or error status');
           print('Response data: $responseData');
@@ -161,8 +184,20 @@ class CurrencyService extends GetxService {
         };
       }
 
+      // Get the userTableId for the new endpoint
+      final userTableId = await AuthStorage.getUserTableId();
+      if (userTableId == null) {
+        print('CurrencyService: No userTableId available');
+        return {
+          'status': 'error',
+          'code': 'ERR_AUTH',
+          'message': 'User table ID not available',
+        };
+      }
+
       print(
           'CurrencyService: Fetching wallets with provided token: ${token.substring(0, 10)}...');
+      print('CurrencyService: Using userTableId: $userTableId');
       print('CurrencyService: Attempt ${retryCount + 1} of ${maxRetries + 1}');
 
       // Use the provided token directly with a longer timeout
@@ -175,9 +210,9 @@ class CurrencyService extends GetxService {
         },
       );
 
-      // Make API call using THttpHelper.dio
+      // Make API call using the new comprehensive wallet overview endpoint
       final response = await THttpHelper.dio.get(
-        '/api/user/wallets',
+        '/api/v1/wallets/user/$userTableId/overview',
         options: options,
       );
 
@@ -187,9 +222,18 @@ class CurrencyService extends GetxService {
       if (response.statusCode == 200) {
         final responseData = response.data;
 
-        if (responseData['status'] == 'success' &&
-            responseData['data'] != null) {
-          return responseData;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          // Extract wallets from the nested data structure
+          final wallets = responseData['data']['wallets'] ?? [];
+
+          // Convert the response format to match the expected format
+          return {
+            'status': 'success',
+            'data': wallets,
+            'message': responseData['message'],
+            'summary': responseData['data']['summary'],
+            'totalWallets': responseData['data']['totalWallets'],
+          };
         } else {
           print('CurrencyService: Invalid response format or error status');
           print('Response data: $responseData');

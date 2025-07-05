@@ -164,10 +164,14 @@ class LoginForm extends StatelessWidget {
       if (response['status'] == 'success') {
         final token = response['token'] as String;
         final userId = response['userId'] as String;
+        final userTableId = response['userTableId'] as int?;
         final registerStatus = response['registerStatus'] as int;
 
         await AuthStorage.saveToken(token);
         await AuthStorage.saveUserId(userId);
+        if (userTableId != null) {
+          await AuthStorage.saveUserTableId(userTableId);
+        }
         await AuthStorage.saveRegistrationStage(registerStatus);
 
         // Navigate to main screen on success

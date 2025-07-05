@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:lul/utils/http/http_client.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
+import 'package:lul/services/user_info_service.dart';
 import 'package:dio/dio.dart';
 
 class TransactionService extends GetxService {
@@ -9,7 +10,7 @@ class TransactionService extends GetxService {
   }
 
   Future<Map<String, dynamic>> walletToWalletTransfer({
-    required int senderWalletTypeId,
+    required String currency,
     required String receiverWorkerId,
     required double amount,
     required String pin,
@@ -33,36 +34,84 @@ class TransactionService extends GetxService {
         };
       }
 
-      // Create the request data
+      // Get the sender's worker ID
+      final senderWorkerId = await UserInfoService.getUserUniqueId();
+      if (senderWorkerId == null || senderWorkerId.isEmpty) {
+        print('TransactionService: Sender worker ID not found');
+        return {
+          'status': 'error',
+          'code': 'ERR_503',
+          'message': 'Unable to retrieve sender information. Please try again.'
+        };
+      }
+
+      print('TransactionService: Sender worker ID: $senderWorkerId');
+
+      // Create the request data for unified transfer endpoint
       final Map<String, dynamic> requestData = {
-        'senderWalletTypeId': senderWalletTypeId,
+        'senderWorkerId': senderWorkerId,
         'receiverWorkerId': receiverWorkerId,
+        'currency': currency,
         'amount': amount,
         'pin': pin,
-        'description': description,
-        'idempotencyKey': idempotencyKey,
+        'transactionType': 'PAYMENT',
       };
 
-      print('TransactionService: Transaction request data: $requestData');
+      // Add optional fields if they exist
+      if (description.isNotEmpty) {
+        requestData['description'] = description;
+      }
+      if (idempotencyKey.isNotEmpty) {
+        requestData['idempotencyKey'] = idempotencyKey;
+      }
 
-      // Use Dio with JWT token
+      print('TransactionService: Unified transfer request data: $requestData');
+
+      // Use Dio with JWT token for the new unified endpoint
       print(
-          'TransactionService: Sending API request to /api/transactions/wallet-to-wallet');
+          'TransactionService: Sending API request to /api/v1/unified-transfer/transfer');
       final response = await THttpHelper.dio.post(
-        '/api/transactions/wallet-to-wallet',
+        '/api/v1/unified-transfer/transfer',
         data: requestData,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
+          // Increase timeout for transaction requests to 45 seconds
+          receiveTimeout: const Duration(seconds: 45),
+          sendTimeout: const Duration(seconds: 45),
         ),
       );
 
       print(
           'TransactionService: API response received: ${response.statusCode}');
       print('TransactionService: Response data: ${response.data}');
-      return response.data;
+
+      // Handle unified response format
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+        if (responseData['success'] == true) {
+          return {
+            'status': 'success',
+            'data': responseData['data'] ?? {},
+            'message':
+                responseData['message'] ?? 'Transfer processed successfully',
+          };
+        } else {
+          return {
+            'status': 'error',
+            'code': responseData['code'] ?? 'ERR_UNKNOWN',
+            'message': responseData['message'] ?? 'Transfer failed',
+          };
+        }
+      } else {
+        return {
+          'status': 'error',
+          'code': 'ERR_${response.statusCode}',
+          'message': 'Transfer failed with status ${response.statusCode}',
+        };
+      }
     } catch (e) {
       print('TransactionService: Error during transaction: $e');
 
@@ -237,6 +286,9 @@ class TransactionService extends GetxService {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
+          // Increase timeout for transaction requests to 45 seconds
+          receiveTimeout: const Duration(seconds: 45),
+          sendTimeout: const Duration(seconds: 45),
         ),
       );
 
@@ -436,6 +488,9 @@ class TransactionService extends GetxService {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
+          // Increase timeout for transaction requests to 45 seconds
+          receiveTimeout: const Duration(seconds: 45),
+          sendTimeout: const Duration(seconds: 45),
         ),
       );
 

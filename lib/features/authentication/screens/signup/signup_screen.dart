@@ -641,6 +641,9 @@ class SignUpScreen2 extends StatelessWidget {
               int.parse(response['registerStatus'].toString());
 
           await AuthStorage.saveToken(token);
+          if (response['userTableId'] != null) {
+            await AuthStorage.saveUserTableId(response['userTableId']);
+          }
           await AuthStorage.saveRegistrationStage(registerStatus);
 
           Get.find<LulLoaders>().successDialog(

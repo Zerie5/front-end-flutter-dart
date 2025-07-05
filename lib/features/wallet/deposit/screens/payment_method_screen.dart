@@ -71,11 +71,16 @@ class PaymentMethodScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        FontAwesomeIcons.dollarSign,
-                        color: TColors.secondary,
-                        size: TSizes.iconSm,
-                      ),
+                      Obx(() => Text(
+                            controller.selectedWalletCurrencySymbol,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .apply(
+                                  color: TColors.secondary,
+                                  fontWeightDelta: 2,
+                                ),
+                          )),
                       const SizedBox(width: TSizes.xs),
                       Text(
                         controller

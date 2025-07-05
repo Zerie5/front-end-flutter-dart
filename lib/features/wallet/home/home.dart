@@ -17,7 +17,8 @@ import 'package:lul/utils/helpers/helper_functions.dart';
 import 'package:lul/utils/language/language_controller.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
 import 'package:lul/features/wallet/settings/profile/controller/user_controller.dart';
-import 'package:lul/features/wallet/deposit/screens/deposit_screen.dart';
+import 'package:lul/features/wallet/deposit/screens/wallet_selection_screen.dart';
+import 'package:lul/features/wallet/deposit/controllers/deposit_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -300,8 +301,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                       .getText('raisefunds_hm'),
                                   buttonSize: buttonSize,
                                   onPressed: () {
-                                    // Navigate to deposit screen
-                                    Get.to(() => const DepositScreen());
+                                    // Initialize DepositController and navigate to wallet selection
+                                    Get.put(DepositController());
+                                    Get.to(() => const WalletSelectionScreen());
                                   },
                                 );
                               }),

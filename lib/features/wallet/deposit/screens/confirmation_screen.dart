@@ -9,7 +9,7 @@ import '../../../../utils/popups/full_screen_loader.dart';
 import '../controllers/deposit_controller.dart';
 import '../models/deposit_models.dart';
 import '../services/deposit_api_service.dart';
-import 'success_screen.dart';
+import 'unified_success_screen.dart';
 
 class ConfirmationScreen extends StatelessWidget {
   const ConfirmationScreen({super.key});
@@ -25,53 +25,15 @@ class ConfirmationScreen extends StatelessWidget {
         'assets/lottie/lottie.json',
       );
 
-      // Prepare card or bank details
-      CardModel? cardDetails;
-      BankModel? bankDetails;
-
-      if (controller.selectedPaymentMethod.value == PaymentMethodType.card) {
-        cardDetails = CardModel(
-          cardNumber: controller.cardNumberController.text.replaceAll('-', ''),
-          expiryMonth: controller.expiryMonthController.text,
-          expiryYear: controller.expiryYearController.text,
-          cvv: controller.cvvController.text,
-          cardholderName: controller.cardholderNameController.text,
-        );
-      } else if (controller.selectedPaymentMethod.value ==
-          PaymentMethodType.bank) {
-        bankDetails = BankModel(
-          bankName: controller.selectedBank.value?.bankName ?? '',
-          accountNumber: controller.accountNumberController.text,
-          routingNumber: controller.routingNumberController.text,
-          accountHolderName: controller.accountHolderNameController.text,
-          accountType: BankAccountType.checking,
-        );
-      }
-
-      // Make API call to process deposit
-      final apiResponse = await DepositApiService.processDeposit(
-        amount: controller.depositAmount.value,
-        currency: 'USD',
-        walletId: 2, // USD dollar wallet
-        paymentMethodType: controller.selectedPaymentMethod.value!,
-        description:
-            'Wallet top-up via ${controller.selectedPaymentMethod.value == PaymentMethodType.card ? 'card' : 'bank transfer'}',
-        cardDetails: cardDetails,
-        bankDetails: bankDetails,
-        idempotencyKey: DepositApiService.generateIdempotencyKey(),
-      );
+      // Make API call to process deposit using unified endpoint
+      final apiResponse = await DepositApiService.processUnifiedDeposit();
 
       // Dismiss loading dialog
       TFullScreenLoader.stopLoading();
 
-      // Navigate to success screen with real API response data
-      Get.off(() => SuccessScreen(
-            amount: apiResponse.transaction.amount,
-            paymentMethod: controller.selectedPaymentMethod.value!,
-            transactionId: apiResponse.transaction.transactionId,
-            depositId: apiResponse.transaction.transactionId, // Using same ID
-            timestamp: apiResponse.transaction.timestamp,
-            apiResponse: apiResponse, // Pass the full API response
+      // Navigate to success screen with unified API response
+      Get.off(() => UnifiedSuccessScreen(
+            response: apiResponse,
           ));
     } catch (e) {
       // Dismiss loading dialog
@@ -151,11 +113,14 @@ class ConfirmationScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        FontAwesomeIcons.dollarSign,
-                        color: TColors.secondary,
-                        size: TSizes.iconMd,
-                      ),
+                      Obx(() => Text(
+                            controller.selectedWalletCurrencySymbol,
+                            style:
+                                Theme.of(context).textTheme.displaySmall!.apply(
+                                      color: TColors.secondary,
+                                      fontWeightDelta: 2,
+                                    ),
+                          )),
                       const SizedBox(width: TSizes.xs),
                       Obx(() => Text(
                             controller.getFormattedAmount(

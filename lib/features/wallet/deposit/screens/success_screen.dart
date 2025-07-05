@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lul/navigation_menu.dart';
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/theme/widget_themes/lul_button_style.dart';
@@ -125,10 +126,12 @@ class SuccessScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        FontAwesomeIcons.dollarSign,
-                        color: TColors.secondary,
-                        size: TSizes.iconLg,
+                      Text(
+                        controller.selectedWalletCurrencySymbol,
+                        style: Theme.of(context).textTheme.displayMedium!.apply(
+                              color: TColors.secondary,
+                              fontWeightDelta: 2,
+                            ),
                       ),
                       const SizedBox(width: TSizes.xs),
                       Text(
@@ -144,7 +147,7 @@ class SuccessScreen extends StatelessWidget {
                   Text(
                     apiResponse != null
                         ? 'Added to your ${apiResponse!.wallet.currency} Wallet'
-                        : 'Added to your USD Wallet',
+                        : 'Added to your ${controller.selectedWalletCurrencyCode} Wallet',
                     style: Theme.of(context).textTheme.titleMedium!.apply(
                           color: TColors.secondary,
                         ),
@@ -390,10 +393,7 @@ class SuccessScreen extends StatelessWidget {
                 LulButton(
                   onPressed: () {
                     // Go back to home screen
-                    Get.back();
-                    Get.back();
-                    Get.back();
-                    Get.back();
+                    Get.offAll(() => const NavigationMenu());
                   },
                   text: 'Done',
                   backgroundColor: TColors.success,

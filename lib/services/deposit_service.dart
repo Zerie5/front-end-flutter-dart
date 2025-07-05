@@ -187,47 +187,29 @@ class MockDepositService {
   static MockResult _getMockCardResult(String cardNumber) {
     final cleaned = cardNumber.replaceAll(RegExp(r'\D'), '');
 
-    // Test card numbers for different scenarios
+    // For mock implementation: ALL test card numbers work
     switch (cleaned) {
       case '4111111111111111': // Visa success
       case '4000000000000002': // Visa success
       case '5555555555554444': // Mastercard success
       case '5200000000000007': // Mastercard success
+      case '4000000000000127': // Previously declined - now works in mock
+      case '4000000000000135': // Previously declined - now works in mock
+      case '4000000000000119': // Previously error - now works in mock
+      case '4000000000000101': // Previously insufficient funds - now works in mock
         return MockResult(success: true, message: 'Card approved');
 
-      case '4000000000000127': // Declined card
-      case '4000000000000135': // Declined card
-        return MockResult(success: false, message: 'Card declined by issuer');
-
-      case '4000000000000119': // Processing error
-        return MockResult(success: false, message: 'Payment processing error');
-
-      case '4000000000000101': // Insufficient funds
-        return MockResult(success: false, message: 'Insufficient funds');
-
       default:
-        // For any other card number, simulate random success/failure
-        final random = Random();
-        if (random.nextDouble() > 0.15) {
-          // 85% success rate
-          return MockResult(success: true, message: 'Card approved');
-        } else {
-          final failures = [
-            'Card declined by issuer',
-            'Payment processing error',
-            'Card expired',
-            'Invalid card details',
-          ];
-          final failureMessage = failures[random.nextInt(failures.length)];
-          return MockResult(success: false, message: failureMessage);
-        }
+        // For mock implementation: ALL cards work to ensure testing is smooth
+        return MockResult(success: true, message: 'Card approved');
     }
   }
 
-  /// Validate card number format (Luhn algorithm not required, just length)
+  /// Validate card number format (Mock - very lenient for testing)
   static bool isValidCardNumber(String cardNumber) {
     final cleaned = cardNumber.replaceAll(RegExp(r'\D'), '');
-    return cleaned.length >= 13 && cleaned.length <= 19;
+    // For mock: accept any card number with at least 4 digits
+    return cleaned.length >= 4;
   }
 
   /// Validate expiry date

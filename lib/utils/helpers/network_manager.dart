@@ -173,7 +173,7 @@ class NetworkManager extends GetxController {
   Future<bool> _tryAlternativeServers() async {
     final urls = [
       ///'https://lul-backend.onrender.com',
-      'https://lul-backend.onrender.com',
+      THttpHelper.baseUrl,
     ];
 
     for (final url in urls) {

@@ -80,13 +80,14 @@ class DepositScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        '\$',
-                        style: Theme.of(context).textTheme.displayLarge!.apply(
-                              color: TColors.secondary,
-                              fontWeightDelta: 2,
-                            ),
-                      ),
+                      Obx(() => Text(
+                            controller.selectedWalletCurrencySymbol,
+                            style:
+                                Theme.of(context).textTheme.displayLarge!.apply(
+                                      color: TColors.secondary,
+                                      fontWeightDelta: 2,
+                                    ),
+                          )),
                       const SizedBox(width: TSizes.sm),
                       Expanded(
                         child: TextFormField(
@@ -185,12 +186,12 @@ class DepositScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: TSizes.sm),
                   Expanded(
-                    child: Text(
-                      'Funds will be added to your USD wallet. Processing fees may apply based on payment method.',
-                      style: Theme.of(context).textTheme.bodySmall!.apply(
-                            color: TColors.white,
-                          ),
-                    ),
+                    child: Obx(() => Text(
+                          'Funds will be added to your ${controller.selectedWalletCurrencyCode} wallet. Processing fees may apply based on payment method.',
+                          style: Theme.of(context).textTheme.bodySmall!.apply(
+                                color: TColors.white,
+                              ),
+                        )),
                   ),
                 ],
               ),

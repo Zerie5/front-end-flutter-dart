@@ -225,18 +225,18 @@ class CurrencyController extends GetxController with WidgetsBindingObserver {
 
     try {
       final List<Currency> fetchedCurrencies = wallets.map((wallet) {
-        final double balance = (wallet['availableBalance'] ?? 0.0).toDouble();
-        final int id = wallet['id'] ?? 0;
-        final int walletTypeId = wallet['walletTypeId'] ?? 0;
+        final double balance = (wallet['balance'] ?? 0.0).toDouble();
+        final int id = wallet['userWalletId'] ?? 0;
+        final int walletTypeId = wallet['walletId'] ?? 0;
 
         return Currency(
           id: id,
           walletTypeId: walletTypeId,
           countryCode: wallet['countryCode'] ?? '',
-          name: wallet['name'] ?? '',
+          name: wallet['currencyName'] ?? '',
           description: wallet['description'] ?? '',
           availableBalance: balance,
-          code: wallet['code'] ?? '',
+          code: wallet['currencyCode'] ?? '',
         );
       }).toList();
 

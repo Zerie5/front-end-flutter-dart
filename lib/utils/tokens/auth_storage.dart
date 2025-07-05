@@ -4,6 +4,7 @@ class AuthStorage {
   static const String _tokenKey = 'auth_token';
   static const String _pinKey = 'user_pin';
   static const String _userIdKey = 'user_id';
+  static const String _userTableIdKey = 'user_table_id';
   static const String _userUniqueIdKey = 'user_unique_id';
   static const String _registrationStageKey = 'registration_stage';
 
@@ -104,6 +105,31 @@ class AuthStorage {
     }
   }
 
+  // Save userTableId
+  static Future<void> saveUserTableId(int userTableId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_userTableIdKey, userTableId);
+      print('AuthStorage: UserTableId saved successfully: $userTableId');
+    } catch (e) {
+      print('AuthStorage: Error saving userTableId: $e');
+      throw Exception('Failed to save userTableId');
+    }
+  }
+
+  // Get userTableId
+  static Future<int?> getUserTableId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userTableId = prefs.getInt(_userTableIdKey);
+      print('AuthStorage: UserTableId retrieved: $userTableId');
+      return userTableId;
+    } catch (e) {
+      print('AuthStorage: Error retrieving userTableId: $e');
+      return null;
+    }
+  }
+
   // Clear specific token
   static Future<void> clearToken() async {
     try {
@@ -170,6 +196,7 @@ class AuthStorage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);
     await prefs.remove(_userIdKey);
+    await prefs.remove(_userTableIdKey);
     await prefs.remove(_userUniqueIdKey);
     await prefs.remove(_registrationStageKey);
   }

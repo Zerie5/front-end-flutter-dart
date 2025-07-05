@@ -220,6 +220,9 @@ class TransferController extends GetxController {
       case 'ERR_502':
         return _languageController.getText('err_502') ??
             'Session expired. Please login again';
+      case 'ERR_503':
+        return _languageController.getText('err_503') ??
+            'Unable to retrieve sender information. Please try again';
       // Add new error codes for non-wallet transfers
       case 'ERR_921':
         return _languageController.getText('err_921') ??
@@ -277,7 +280,7 @@ class TransferController extends GetxController {
           'TransferController: Transaction details - Amount: ${sendAmount.value}, Currency: ${currency.value}, WalletTypeID: ${walletTypeId.value}');
 
       final result = await _transactionService.walletToWalletTransfer(
-        senderWalletTypeId: walletTypeId.value,
+        currency: currency.value,
         receiverWorkerId: contactId.value,
         amount: sendAmount.value,
         pin: pin,
