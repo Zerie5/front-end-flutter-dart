@@ -17,15 +17,15 @@ LulPay is a secure, feature-rich mobile financial platform built with Flutter th
 - **Security Validation:** Duplicate email/phone checking, password strength validation
 - **OTP System:** SMS-based verification with retry limits and expiration
 - **PIN-protected transactions and app access**
-- **Biometric authentication options for enhanced security**
+
 
 ### Wallet Management
 - **Multi-currency wallet support with real-time balance display**
 - **Real Stellar Integration:** Creates actual Stellar testnet accounts with KeyPair generation
 - **Encrypted Key Storage:** AES encryption for private key security
-- **Auto-Funding System:** New wallets automatically funded with 100 XLM via Friendbot
+- **Auto-Funding System:** New wallets automatically funded with 10000 XLM via Friendbot
 - **Multi-Currency Support:** USD/EURO (blockchain), UGX/KES/ETB/SSP (backend)
-- **Balance Synchronization:** Real-time balance updates from Stellar network
+- **Balance Synchronization:** Real-time balance updates from Stellar network and sync with database
 - **One-click currency switching between different available currencies**
 - **Currency conversion with competitive rates**
 - **Comprehensive transaction details and receipt generation**
@@ -63,10 +63,11 @@ LulPay is a secure, feature-rich mobile financial platform built with Flutter th
 - **Recipient information collection with validation**
 - **Multiple currency support for non-wallet transactions**
 - **Customizable transaction descriptions**
+-  **Support for different type of Refugee documents**
 
 ### User Profile Management
 - **View and edit personal information**
-- **Update profile picture and contact details**
+- **Update  contact details**
 - **View account verification status**
 - **Manage notification preferences**
 - **Account activity dashboard and statistics**
