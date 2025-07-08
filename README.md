@@ -13,7 +13,7 @@ This is the Flutter frontend for **LulPay**, a Stellar-powered mobile financial 
 | 1  | Frontend Login & Stellar Wallet Funding with payment system integration                                   | ✅ Complete  |
 | 2  | Wallet-to-wallet transfers with Stellar blockchain integration                                            | ✅ Complete  |
 
-📂 **Full implementation details:** [../DELIVERABLES.md](../DELIVERABLES.md)  
+📂 **Full implementation details:** [../DELIVERABLES.md](https://github.com/Zerie5/Zerie5/blob/main/DELIVERABLES.md)  
 🔗 **Backend API Repo:** [lul-backend-public](https://github.com/Zerie5/lul-backend-public)
 
 ---
