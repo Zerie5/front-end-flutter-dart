@@ -10,6 +10,7 @@ import 'package:lul/features/wallet/settings/security_setting/widgets/pin_check.
 import 'package:lul/features/wallet/settings/settings.dart';
 import 'package:lul/features/wallet/settings/security_setting/widgets/pin_controller.dart';
 import 'package:lul/features/wallet/transactions/screens/transaction_history_screen.dart';
+import 'package:lul/features/crowdfunding/screens/crowdfunding_hub_screen.dart';
 import 'package:lul/utils/constants/colors.dart';
 import 'package:lul/utils/helpers/helper_functions.dart';
 import 'package:lul/utils/helpers/network_manager.dart';
@@ -17,6 +18,7 @@ import 'package:lul/utils/language/language_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lul/utils/popups/loaders.dart';
 import 'package:lul/utils/tokens/auth_storage.dart';
+import 'package:lul/services/auth_service.dart';
 
 class NavigationMenu extends StatefulWidget {
   const NavigationMenu({super.key});
@@ -344,8 +346,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
                               darkmode: dark),
                           _buildDrawerItem(context,
                               index: 2,
-                              icon: FontAwesomeIcons.coins,
-                              label: _languageController.getText('currency'),
+                              icon: FontAwesomeIcons.handHoldingHeart,
+                              label: 'Crowd Funding',
                               controller: _navigationController,
                               darkmode: dark),
                           _buildDrawerItem(context,
@@ -400,6 +402,76 @@ class _NavigationMenuState extends State<NavigationMenu> {
     );
   }
 
+  Future<void> _handleLogout() async {
+    try {
+      // Show confirmation dialog
+      final confirmed = await LulLoaders.alertDialog(
+        title: _languageController.getText('logout'),
+        message: _languageController.getText('logout_confirmation'),
+      );
+
+      if (!confirmed) return;
+
+      // Show loading dialog
+      LulLoaders.showLoadingDialog();
+
+      // Call the enhanced logout method
+      final result = await AuthService.logout();
+
+      // Hide loading dialog
+      Get.back();
+
+      if (result['status'] == 'success') {
+        // Show success dialog
+        Get.find<LulLoaders>().successDialog(
+          title: _languageController.getText('logout_success') ?? 'Success',
+          message: result['message'] ?? 'Successfully logged out',
+          onPressed: () {
+            // Navigate to login screen after success dialog
+            Get.offAll(() => LoginScreen());
+          },
+        );
+      } else if (result['status'] == 'warning') {
+        // Show warning dialog for partial logout
+        Get.find<LulLoaders>().warningDialog(
+          title: _languageController.getText('logout_warning') ?? 'Warning',
+          message: result['message'] ?? 'Logout completed with warnings',
+          onPressed: () {
+            // Navigate to login screen even with warnings
+            Get.offAll(() => LoginScreen());
+          },
+        );
+      } else {
+        // Show error dialog but still navigate to login
+        Get.find<LulLoaders>().errorDialog(
+          title: _languageController.getText('logout_error') ?? 'Error',
+          message: result['message'] ?? 'Logout completed with errors',
+          onPressed: () {
+            // Navigate to login screen even with errors
+            Get.offAll(() => LoginScreen());
+          },
+        );
+      }
+    } catch (e) {
+      // Hide loading dialog if it's still showing
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      print('Logout handler error: $e');
+
+      // Show error dialog
+      Get.find<LulLoaders>().errorDialog(
+        title: _languageController.getText('error') ?? 'Error',
+        message: 'An unexpected error occurred during logout',
+        onPressed: () {
+          // Navigate to login screen as fallback
+          Get.offAll(() => LoginScreen());
+        },
+      );
+    }
+  }
+
   Widget _buildDrawerItem(
     BuildContext context, {
     required int index,
@@ -431,16 +503,11 @@ class _NavigationMenuState extends State<NavigationMenu> {
         onTap: () async {
           if (index == 8) {
             // Logout case
-            final confirmed = await LulLoaders.alertDialog(
-              title: _languageController.getText('logout'),
-              message: _languageController.getText('logout_confirmation'),
-            );
-
-            if (confirmed) {
-              await AuthStorage
-                  .clearAllStorage(); // Clears both token and registration stage
-              Get.offAll(() => LoginScreen());
-            }
+            await _handleLogout();
+          } else if (index == 2) {
+            // Crowd Funding case - navigate directly to crowdfunding hub
+            Navigator.pop(context); // Close drawer
+            Get.to(() => const CrowdfundingHubScreen());
           } else {
             print('NavigationMenu: Button clicked for index $index');
             if (index == 5) {

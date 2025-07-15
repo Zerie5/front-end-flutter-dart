@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:lul/features/wallet/settings/currency_setting/widget/currency_controller.dart';
 import 'package:dio/dio.dart';
+import 'package:lul/models/auth_models.dart';
 
 class AuthService {
   static Future<Map<String, dynamic>> login(
@@ -44,45 +45,52 @@ class AuthService {
         });
       }
 
-      if (response.data['status'] == 'success') {
-        final String token = response.data['token'];
+      // Parse the enhanced login response
+      final loginResponse = LoginResponse.fromJson(response.data);
+      print('Login Response: $loginResponse');
 
-        print('Login Success - Token: $token');
-        print('Login Success - UserId: ${response.data['userId']}');
+      if (loginResponse.isSuccess) {
+        print('Login Success - Processing dual token response');
         print(
-            'Login Success - Register Status: ${response.data['registerStatus']}');
-        print('Login Success - Profile: ${response.data['profile']}');
+            'Login Success - Has dual tokens: ${loginResponse.hasDualTokens}');
+        print('Login Success - Has expiry: ${loginResponse.hasExpiry}');
 
-        // Save token to storage
-        await AuthStorage.saveToken(token);
-        await AuthStorage.saveUserId(response.data['userId']);
+        // Save enhanced authentication tokens using new method
+        await AuthStorage.saveAuthTokens(
+          accessToken: loginResponse.token,
+          refreshToken: loginResponse.refreshToken,
+          sessionId: loginResponse.sessionId,
+          expiresAt: loginResponse.expiresAt,
+        );
 
-        // Save userTableId if available
-        if (response.data['userTableId'] != null) {
-          await AuthStorage.saveUserTableId(response.data['userTableId']);
-          print(
-              'Login Success - UserTableId saved: ${response.data['userTableId']}');
+        // Save user data (backward compatibility)
+        if (loginResponse.userId != null) {
+          await AuthStorage.saveUserId(loginResponse.userId!);
         }
 
-        // Save user unique ID if available in the response
-        String? userUniqueId;
-        if (response.data['profile'] != null &&
-            response.data['profile']['userId'] != null) {
-          userUniqueId = response.data['profile']['userId'];
-          print('Login Success - Saving user unique ID: $userUniqueId');
-          await AuthStorage.saveUserUniqueId(userUniqueId!);
-        } else if (response.data['uniqueId'] != null) {
-          // Alternative field name that might be used
-          userUniqueId = response.data['uniqueId'];
+        if (loginResponse.userTableId != null) {
+          await AuthStorage.saveUserTableId(loginResponse.userTableId!);
           print(
-              'Login Success - Saving user unique ID (from uniqueId field): $userUniqueId');
-          await AuthStorage.saveUserUniqueId(userUniqueId!);
+              'Login Success - UserTableId saved: ${loginResponse.userTableId}');
+        }
+
+        // Save user unique ID with enhanced logic
+        String? userUniqueId = loginResponse.userUniqueId;
+        if (userUniqueId == null && loginResponse.profile != null) {
+          // Try to extract from profile
+          userUniqueId = loginResponse.profile!['userId']?.toString();
+        }
+
+        if (userUniqueId != null && userUniqueId.isNotEmpty) {
+          await AuthStorage.saveUserUniqueId(userUniqueId);
+          print('Login Success - User unique ID saved: $userUniqueId');
         } else {
           print('Warning: No user unique ID found in login response');
         }
 
+        // Save registration stage
         await AuthStorage.saveRegistrationStage(
-            response.data['registerStatus'] ?? 4);
+            loginResponse.registerStatus ?? 4);
 
         // Load currency data after successful login
         try {
@@ -106,23 +114,27 @@ class AuthService {
 
         return {
           'status': 'success',
-          'token': token,
-          'userId': response.data['userId'],
-          'userTableId': response.data['userTableId'],
+          'token': loginResponse.token,
+          'userId': loginResponse.userId,
+          'userTableId': loginResponse.userTableId,
           'userUniqueId': userUniqueId,
-          'profile': response.data['profile'],
-          'registerStatus': response.data['registerStatus']
+          'profile': loginResponse.profile,
+          'registerStatus': loginResponse.registerStatus,
+          // NEW: Additional dual token fields for backward compatibility
+          'refreshToken': loginResponse.refreshToken,
+          'sessionId': loginResponse.sessionId,
+          'expiresAt': loginResponse.expiresAt?.toIso8601String(),
         };
       }
 
       // Handle specific error codes from the server
-      print('Login Failed - Code: ${response.data['code']}');
-      print('Login Failed - Message: ${response.data['message']}');
+      print('Login Failed - Code: ${loginResponse.code}');
+      print('Login Failed - Message: ${loginResponse.message}');
 
       return {
         'status': 'error',
-        'code': response.data['code'] ?? 'ERR_UNKNOWN',
-        'message': response.data['message'] ?? 'An unknown error occurred'
+        'code': loginResponse.code ?? 'ERR_UNKNOWN',
+        'message': loginResponse.message ?? 'An unknown error occurred'
       };
     } catch (e, stackTrace) {
       print('Login error: $e');
@@ -236,14 +248,70 @@ class AuthService {
 
   static Future<Map<String, dynamic>> logout() async {
     try {
-      // Clear all authentication data
-      await AuthStorage.clearAll();
-      print('Logout: All auth data cleared');
+      // Get the current token before clearing storage
+      final token = await AuthStorage.getToken();
 
-      return {'status': 'success'};
+      if (token != null) {
+        // Call backend logout endpoint
+        try {
+          final response = await THttpHelper.dio.post(
+            '/api/auth/logout',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+
+          print('Logout API Response: ${response.data}');
+
+          if (response.data['status'] == 'success') {
+            // Backend logout successful, now clear local storage
+            await AuthStorage.clearAll();
+            print('Logout: Backend session terminated and local data cleared');
+
+            return {
+              'status': 'success',
+              'message': response.data['message'] ?? 'Successfully logged out'
+            };
+          } else {
+            // Backend logout failed, but still clear local storage
+            await AuthStorage.clearAll();
+            print('Logout: Backend logout failed, but local data cleared');
+
+            return {
+              'status': 'warning',
+              'message':
+                  'Logged out locally, but server session may still be active'
+            };
+          }
+        } catch (e) {
+          print('Logout API Error: $e');
+          // If backend call fails, still clear local storage
+          await AuthStorage.clearAll();
+
+          return {
+            'status': 'warning',
+            'message': 'Logged out locally, but could not reach server'
+          };
+        }
+      } else {
+        // No token found, just clear any remaining local data
+        await AuthStorage.clearAll();
+        print('Logout: No token found, cleared local data');
+
+        return {'status': 'success', 'message': 'Successfully logged out'};
+      }
     } catch (e) {
       print('Logout error: $e');
-      return {'status': 'error', 'code': 'ERR_700'};
+      // Fallback: clear local storage even if there's an error
+      try {
+        await AuthStorage.clearAll();
+      } catch (storageError) {
+        print('Error clearing storage: $storageError');
+      }
+
+      return {'status': 'error', 'message': 'Logout completed with errors'};
     }
   }
 
@@ -317,6 +385,166 @@ class AuthService {
         'status': 'error',
         'code': 'ERR_700',
         'message': 'Registration failed'
+      };
+    }
+  }
+
+  // ============================================================================
+  // ENHANCED DUAL TOKEN METHODS
+  // ============================================================================
+
+  /// NEW: Logout from all sessions (enhanced dual token method)
+  static Future<Map<String, dynamic>> logoutAll() async {
+    try {
+      // Get the current token before clearing storage
+      final token = await AuthStorage.getToken();
+
+      if (token != null) {
+        // Call backend logout-all endpoint
+        try {
+          final response = await THttpHelper.dio.post(
+            '/api/auth/logout-all',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+
+          print('LogoutAll API Response: ${response.data}');
+
+          final logoutResponse = LogoutAllResponse.fromJson(response.data);
+
+          if (logoutResponse.isSuccess) {
+            // Backend logout-all successful, now clear local storage
+            await AuthStorage.clearAll();
+            print('LogoutAll: All sessions terminated and local data cleared');
+
+            return {'status': 'success', 'message': logoutResponse.message};
+          } else {
+            // Backend logout-all failed, but still clear local storage
+            await AuthStorage.clearAll();
+            print(
+                'LogoutAll: Backend logout-all failed, but local data cleared');
+
+            return {
+              'status': 'warning',
+              'message':
+                  'Logged out locally, but some server sessions may still be active'
+            };
+          }
+        } catch (e) {
+          print('LogoutAll API Error: $e');
+          // If backend call fails, still clear local storage
+          await AuthStorage.clearAll();
+
+          return {
+            'status': 'warning',
+            'message': 'Logged out locally, but could not reach server'
+          };
+        }
+      } else {
+        // No token found, just clear any remaining local data
+        await AuthStorage.clearAll();
+        print('LogoutAll: No token found, cleared local data');
+
+        return {'status': 'success', 'message': 'Successfully logged out'};
+      }
+    } catch (e) {
+      print('LogoutAll error: $e');
+      // Fallback: clear local storage even if there's an error
+      try {
+        await AuthStorage.clearAll();
+      } catch (storageError) {
+        print('Error clearing storage: $storageError');
+      }
+
+      return {'status': 'error', 'message': 'Logout completed with errors'};
+    }
+  }
+
+  /// NEW: Refresh access token using refresh token
+  static Future<Map<String, dynamic>> refreshTokenMethod() async {
+    try {
+      // Get refresh token from storage
+      final refreshToken = await AuthStorage.getRefreshToken();
+
+      if (refreshToken == null || refreshToken.isEmpty) {
+        print('RefreshToken: No refresh token available');
+        return {
+          'status': 'error',
+          'code': 'ERR_NO_REFRESH_TOKEN',
+          'message': 'No refresh token available'
+        };
+      }
+
+      // Create refresh request
+      final request = RefreshTokenRequest(refreshToken: refreshToken);
+
+      // Call refresh API endpoint
+      final response = await THttpHelper.dio.post(
+        '/api/auth/refresh',
+        data: request.toJson(),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      print('RefreshToken API Response: ${response.data}');
+
+      final refreshResponse = RefreshTokenResponse.fromJson(response.data);
+
+      if (refreshResponse.isSuccess && refreshResponse.token != null) {
+        // Save new access token and expiry
+        await AuthStorage.saveAuthTokens(
+          accessToken: refreshResponse.token!,
+          expiresAt: refreshResponse.expiresAt,
+        );
+
+        print('RefreshToken: Token refreshed successfully');
+        print(
+            'RefreshToken: New token expires at: ${refreshResponse.expiresAt}');
+
+        return {
+          'status': 'success',
+          'token': refreshResponse.token,
+          'expiresAt': refreshResponse.expiresAt?.toIso8601String(),
+          'message': 'Token refreshed successfully'
+        };
+      } else {
+        print('RefreshToken: Token refresh failed: ${refreshResponse.message}');
+        return {
+          'status': 'error',
+          'code': refreshResponse.code ?? 'ERR_REFRESH_FAILED',
+          'message': refreshResponse.message ?? 'Token refresh failed'
+        };
+      }
+    } catch (e) {
+      print('RefreshToken error: $e');
+
+      // Handle different error types
+      if (e is DioException) {
+        if (e.response?.statusCode == 401) {
+          return {
+            'status': 'error',
+            'code': 'ERR_REFRESH_EXPIRED',
+            'message': 'Refresh token expired. Please log in again.'
+          };
+        } else if (e.response?.statusCode == 400) {
+          return {
+            'status': 'error',
+            'code': 'ERR_INVALID_REFRESH_TOKEN',
+            'message': 'Invalid refresh token. Please log in again.'
+          };
+        }
+      }
+
+      return {
+        'status': 'error',
+        'code': 'ERR_REFRESH_UNKNOWN',
+        'message': 'An unexpected error occurred during token refresh'
       };
     }
   }

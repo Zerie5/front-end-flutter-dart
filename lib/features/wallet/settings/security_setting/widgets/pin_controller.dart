@@ -9,6 +9,7 @@ import 'package:lul/features/wallet/settings/currency_setting/widget/currency_co
 import 'package:lul/features/authentication/screens/login/login.dart';
 import 'package:lul/features/authentication/screens/otp/otp_verify.dart';
 import 'package:lul/common/widgets/pin/create_new_pin.dart';
+import 'package:lul/services/token_manager.dart';
 
 class PINController extends GetxController with WidgetsBindingObserver {
   final RxBool isPinEnabled = true.obs;
@@ -111,6 +112,19 @@ class PINController extends GetxController with WidgetsBindingObserver {
               _isCheckingPin = false;
               CurrencyController.isPinCheckActive = false;
               return;
+            }
+
+            // ENHANCED: Handle token refresh before PIN check
+            print(
+                'PINController: Handling app resume - checking token status...');
+
+            try {
+              final tokenManager = TokenManager.instance;
+              await tokenManager.onAppResume();
+              print('PINController: Token refresh handling completed');
+            } catch (e) {
+              print('PINController: Error during token refresh handling: $e');
+              // Continue with PIN check even if token refresh fails
             }
 
             // Token exists and stage is 4, proceed with PIN check

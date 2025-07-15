@@ -18,6 +18,7 @@ import 'package:lul/services/currency_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lul/services/fcm_service.dart';
 import 'package:lul/services/notification_service.dart';
+import 'package:lul/services/token_manager.dart';
 import 'package:lul/services/user_lookup_service.dart';
 import 'package:lul/services/transaction_service.dart';
 
@@ -47,6 +48,9 @@ class App extends StatelessWidget {
 
     // Initialize Transaction Service
     await Get.putAsync(() => TransactionService().init());
+
+    // Initialize Token Manager (dual token system)
+    await Get.putAsync(() => TokenManager.instance.init());
 
     Get.put(LulLoaders());
     Get.put(LanguageController());

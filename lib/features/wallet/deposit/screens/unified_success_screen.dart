@@ -6,7 +6,6 @@ import '../../../../utils/constants/sizes.dart';
 import '../controllers/deposit_controller.dart';
 import '../models/unified_deposit_models.dart';
 import 'package:lul/utils/helpers/helper_functions.dart';
-import '../../home/home.dart';
 
 class UnifiedSuccessScreen extends StatelessWidget {
   final UnifiedDepositResponse response;
